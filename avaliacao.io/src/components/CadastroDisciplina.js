@@ -2,23 +2,31 @@ import React, { Component } from 'react';
 import {  Container, Button, FormGroup, Label, Input,Form } from 'reactstrap';
 import { USERS_API_URL } from '../constants';
 import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router';
 
 class CadastroDisciplina extends Component {
   constructor(props){
     super(props);
-
-    this.stateInicial = {
+    this.state = {
       id: 0,
-      nome: 'gdsgfsdaaaafgds',
+      nome: '',
       descritivo: '',
       professores : [],
-      items: []
+      items: [],
+      redirect: false
     }
 
-    this.state = this.stateInicial;
-
+    this.setField = this.setField.bind(this);
+    this.salvar = this.salvar.bind(this);
   }
-  
+
+  setField(event) {
+    let {name: fieldName, value} = event.target;
+
+    this.setState({
+      [fieldName]: value
+    });
+  };
 
   componentDidMount(){
     this.obterProfessores();
@@ -34,24 +42,47 @@ class CadastroDisciplina extends Component {
       .catch(err => console.log(err));
   }
 
-
-
   salvar(e){
     e.preventDefault();
-    console.log(this);
+    fetch(`${USERS_API_URL}Disciplinas`, {
+      method: 'post',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+          nome: this.state.nome,
+          descritivo: this.state.descritivo,
+          professores: []
+      })
+    })
+      .then(() => {
+        this.setState({ redirect: true });
+        console.log(this.state);
+        console.log('sucess');
+      })
+      .catch(err => console.log(err));
+      
+    //console.log(this.state);
   }
 
   render() {
     const { nome, descritivo, professores} = this.state;
+    const redirect = this.state.redirect;
+
+    if (redirect) {
+      console.log('Entrou!');
+      return <Redirect to="/"/>;
+    }
+
     return <Container style={{ paddingTop: "20px" }}>
-        <Form onSubmit={ this.salvar }>
+        <Form onSubmit={this.salvar}>
           <FormGroup>
             <Label for="nome">Nome:</Label>
-            <Input type="text" name="nome" placeholder="Informe o nome da disciplina" value={nome} />
+            <Input onChange={this.setField} type="text" name="nome" placeholder="Informe o nome da disciplina" value={nome}/>
           </FormGroup>
           <FormGroup>
             <Label for="descritivo">Descritivo:</Label>
-            <Input type="textarea" name="descritivo"/>
+            <Input onChange={this.setField} type="textarea" name="descritivo" placeholder="Informe o descritivo da disciplina"/>
           </FormGroup>
           <FormGroup>
             <Label for="professores">Professores:</Label>
