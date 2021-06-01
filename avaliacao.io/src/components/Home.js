@@ -37,7 +37,7 @@ class Home extends Component {
     return <Container style={{ paddingTop: "20px" }}>
       <Row>
         <Col>
-          <h3>Lista de disciplinas</h3>
+          <h3>Disciplinas</h3>
         </Col>
       </Row>
       <Row>

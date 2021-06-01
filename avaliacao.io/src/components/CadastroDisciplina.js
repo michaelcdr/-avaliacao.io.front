@@ -12,12 +12,39 @@ class CadastroDisciplina extends Component {
       nome: '',
       descritivo: '',
       professores : [],
+      professoresResult: [],
       items: [],
       redirect: false
     }
 
     this.setField = this.setField.bind(this);
+    this.setProfessores = this.setProfessores.bind(this);
     this.salvar = this.salvar.bind(this);
+  }
+
+  componentDidMount(){
+    this.obterProfessores();
+  }
+
+  salvar (e) {
+    e.preventDefault();
+    fetch(`${USERS_API_URL}Disciplinas`, {
+      method: 'post',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+          nome: this.state.nome,
+          descritivo: this.state.descritivo,
+          professores: this.state.professores
+      })
+    })
+      .then(() => {
+        this.setState({ redirect: true });
+        console.log(this.state);
+        console.log('sucess');
+      })
+      .catch(err => console.log(err));
   }
 
   setField(event) {
@@ -28,49 +55,38 @@ class CadastroDisciplina extends Component {
     });
   };
 
-  componentDidMount(){
-    this.obterProfessores();
+  setProfessores(event) {
+    let opts = [], opt;
+    for (let i = 0, len = event.target.options.length; i < len; i++) {
+        opt = event.target.options[i];
+        if (opt.selected) {
+            opts.push(opt.value);
+        }
+    }
+
+    this.setState({
+        professores: opts
+    });
+    
+    
+    console.log(this.state);
   }
 
   obterProfessores() {
     fetch(USERS_API_URL + "professores")
       .then(res => res.json())
       .then(professoresResult => {
-          this.setState({ professores: professoresResult });
+          this.setState({ professoresResult: professoresResult });
         }
       )
       .catch(err => console.log(err));
   }
 
-  salvar(e){
-    e.preventDefault();
-    fetch(`${USERS_API_URL}Disciplinas`, {
-      method: 'post',
-      headers: {
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-          nome: this.state.nome,
-          descritivo: this.state.descritivo,
-          professores: []
-      })
-    })
-      .then(() => {
-        this.setState({ redirect: true });
-        console.log(this.state);
-        console.log('sucess');
-      })
-      .catch(err => console.log(err));
-      
-    //console.log(this.state);
-  }
-
   render() {
-    const { nome, descritivo, professores} = this.state;
+    const { nome, descritivo, professoresResult} = this.state;
     const redirect = this.state.redirect;
 
     if (redirect) {
-      console.log('Entrou!');
       return <Redirect to="/"/>;
     }
 
@@ -82,12 +98,12 @@ class CadastroDisciplina extends Component {
           </FormGroup>
           <FormGroup>
             <Label for="descritivo">Descritivo:</Label>
-            <Input onChange={this.setField} type="textarea" name="descritivo" placeholder="Informe o descritivo da disciplina"/>
+            <Input onChange={this.setField} type="textarea" name="descritivo" placeholder="Informe o descritivo da disciplina" value={descritivo}/>
           </FormGroup>
           <FormGroup>
             <Label for="professores">Professores:</Label>
-            <Input type="select" name="professores"  multiple> 
-              {this.state.professores.map(opt => <option key={opt.id} value={opt.id}>{opt.nome}</option>)}
+            <Input type="select" name="professores" onChange={this.setProfessores} multiple> 
+              {professoresResult.map(opt => <option key={opt.id} value={opt.id}>{opt.nome}</option>)}
             </Input>
           </FormGroup>
           <Link className="btn btn-warning mr-2" to="/">Voltar</Link>
