@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { Table, Button } from 'reactstrap';
+import { Table } from 'reactstrap';
 import { USERS_API_URL } from '../constants';
 import { Link } from "react-router-dom";
 import ConfirmationModal from './ConfirmationModal';
 
-class DataTable extends Component {
+class ListagemDisciplinas extends Component {
 
   deleteItem = (id) => {
-    fetch(`${USERS_API_URL}disciplinas/${id}`, {
+    fetch(`${USERS_API_URL}Disciplinas/${id}`, {
       method: 'DELETE',
       headers: {
         'Access-Control-Allow-Origin' : '*' ,
@@ -24,7 +24,7 @@ class DataTable extends Component {
         <thead className="thead-dark">
           <tr>
             <th>Nome da disciplina</th>
-            <th style={{ textAlign: "center" }}>Actions</th>
+            <th style={{ textAlign: "center" }}>Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -41,7 +41,7 @@ class DataTable extends Component {
                   <div>
                     &nbsp;&nbsp;&nbsp;
                     <Link className="btn btn-outline-primary" to={`edicao/${item.id}`}>Editar</Link>{' '}
-                    <ConfirmationModal id={item.id} confirm={this.deleteItem} message="Tem certeza que deseja deletar a disciplina?" buttonLabel="Deletar"/>
+                    <ConfirmationModal color={'danger'} id={item.id} confirm={this.deleteItem} message="Tem certeza que deseja deletar a disciplina?" buttonLabel="Deletar"/>
                   </div>
                 </td>
               </tr>
@@ -58,4 +58,4 @@ class DataTable extends Component {
     ;
   }
 }
-export default DataTable;
+export default ListagemDisciplinas;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Col, Container, Row } from 'reactstrap';
-import DataTable from './DataTable';
+import ListagemDisciplinas from './ListagemDisciplinas';
 import { USERS_API_URL } from '../constants';
 
 class Home extends Component {
@@ -12,7 +12,7 @@ class Home extends Component {
   }
 
   getItens = () => {
-    fetch(USERS_API_URL+"disciplinas")
+    fetch(USERS_API_URL+"Disciplinas")
       .then(res => res.json())
       .then(res => this.setState({ items: res }))
       .catch(err => console.log(err));
@@ -42,7 +42,7 @@ class Home extends Component {
       </Row>
       <Row>
         <Col>
-          <DataTable
+          <ListagemDisciplinas
             items={this.state.items}
             updateState={this.updateState}
             deleteItemFromState={this.deleteItemFromState} />

@@ -11,9 +11,9 @@ class CadastroDisciplina extends Component {
       id: 0,
       nome: '',
       descritivo: '',
+      horario: '',
       professores : [],
       professoresResult: [],
-      items: [],
       redirect: false
     }
 
@@ -29,21 +29,28 @@ class CadastroDisciplina extends Component {
   salvar (e) {
     e.preventDefault();
     fetch(`${USERS_API_URL}Disciplinas`, {
-      method: 'post',
+      method: 'POST',
       headers: {
           'Content-Type': 'application/json'
       },
       body: JSON.stringify({
           nome: this.state.nome,
           descritivo: this.state.descritivo,
+          horario: this.state.horario,
           professores: this.state.professores
       })
     })
-      .then(() => {
+    .then(res => res.json())
+    .then((body) => {
+        console.log(body);
+        this.setState({ redirect: true });
+        console.log('Sucess');
+    })
+      /*.then((obj) => {
         this.setState({ redirect: true });
         console.log(this.state);
-        console.log('sucess');
-      })
+        console.log('success');
+      })*/
       .catch(err => console.log(err));
   }
 
@@ -83,7 +90,7 @@ class CadastroDisciplina extends Component {
   }
 
   render() {
-    const { nome, descritivo, professoresResult} = this.state;
+    const { nome, descritivo, horario, professoresResult} = this.state;
     const redirect = this.state.redirect;
 
     if (redirect) {
@@ -101,13 +108,17 @@ class CadastroDisciplina extends Component {
             <Input onChange={this.setField} type="textarea" name="descritivo" placeholder="Informe o descritivo da disciplina" value={descritivo}/>
           </FormGroup>
           <FormGroup>
+            <Label for="horario">Horário:</Label>
+            <Input onChange={this.setField} type="time" name="horario" value={horario}/>
+          </FormGroup>
+          <FormGroup>
             <Label for="professores">Professores:</Label>
             <Input type="select" name="professores" onChange={this.setProfessores} multiple> 
               {professoresResult.map(opt => <option key={opt.id} value={opt.id}>{opt.nome}</option>)}
             </Input>
           </FormGroup>
-          <Link className="btn btn-warning mr-2" to="/">Voltar</Link>
-          <Button>Salvar</Button>
+          <Link className="btn btn-light mr-2" to="/">Voltar</Link>
+          <Button color='success'>Salvar</Button>
         </Form>
     </Container>;
   }

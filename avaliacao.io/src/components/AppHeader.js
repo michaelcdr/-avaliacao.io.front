@@ -34,11 +34,11 @@ class AppHeader extends Component {
             <Collapse isOpen={this.state.isOpen} navbar>
                 <Nav className="ml-auto" navbar>
                     <NavItem>
-                        <NavLink href="/">Hello</NavLink>
+                        <NavLink href="/">Disciplinas</NavLink>
                     </NavItem>
                     <UncontrolledDropdown nav inNavbar>
                         <DropdownToggle nav caret>
-                            World
+                            Perfil
                         </DropdownToggle>
                         <DropdownMenu right>
                             <DropdownItem href="/">For U</DropdownItem>

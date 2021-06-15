@@ -10,30 +10,31 @@ class ModalExample extends Component {
         }
 
         this.setModal = this.setModal.bind(this);
-        this.deleteItem = this.deleteItem.bind(this);
+        this.confirmAction = this.confirmAction.bind(this);
     }
 
     setModal () {
         this.setState({ modal: !this.state.modal});
     }
 
-    deleteItem (id) {
+    confirmAction (id) {
         this.props.confirm(id);
+        this.setModal();
     }
     
     render() {
-        const { buttonLabel, className, message } = this.props;
+        const { buttonLabel, className, message, color } = this.props;
         const { modal } = this.state;
         return (
             <Fragment>
-            <Button color="danger" onClick={this.setModal}>{buttonLabel}</Button>
+            <Button color={color} onClick={this.setModal}>{buttonLabel}</Button>
             <Modal isOpen={modal} toggle={this.setModal} className={className}>
                 <ModalHeader toggle={this.setModal}>Confirmação</ModalHeader>
                 <ModalBody>
                 {message}
                 </ModalBody>
                 <ModalFooter>
-                <Button color="success" onClick={() => this.deleteItem(this.props.id)} >Confirmar</Button>{' '}
+                <Button color="success" onClick={() => this.confirmAction(this.props.id)} >Confirmar</Button>{' '}
                 <Button color="secondary" onClick={this.setModal}>Cancelar</Button>
                 </ModalFooter>
             </Modal>
