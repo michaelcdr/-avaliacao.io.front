@@ -34,7 +34,16 @@ class AppHeader extends Component {
             <Collapse isOpen={this.state.isOpen} navbar>
                 <Nav className="ml-auto" navbar>
                     <NavItem>
-                        <NavLink href="/">Disciplinas</NavLink>
+                        <NavLink href="/coordenador/cadastro">Coordenadores</NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink href="/professor/cadastro">Professores</NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink href="/aluno/cadastro">Alunos</NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink href="/disciplinas">Disciplinas</NavLink>
                     </NavItem>
                     <NavItem>
                         <NavLink href="/">Competencias</NavLink>
