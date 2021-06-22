@@ -36,13 +36,16 @@ class AppHeader extends Component {
                     <NavItem>
                         <NavLink href="/">Disciplinas</NavLink>
                     </NavItem>
+                    <NavItem>
+                        <NavLink href="/">Competencias</NavLink>
+                    </NavItem>
                     <UncontrolledDropdown nav inNavbar>
                         <DropdownToggle nav caret>
                             Perfil
                         </DropdownToggle>
                         <DropdownMenu right>
-                            <DropdownItem href="/">For U</DropdownItem>
-                            <DropdownItem>For Us</DropdownItem>
+                            <DropdownItem href="/">Usuário</DropdownItem>
+                            <DropdownItem>Configurações</DropdownItem>
                         </DropdownMenu>
                     </UncontrolledDropdown>
                 </Nav>

@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import {  Container, Button, FormGroup, Label, Input, Form } from 'reactstrap';
-import { USERS_API_URL } from '../constants';
 import { Link } from 'react-router-dom';
 import { Redirect, withRouter } from 'react-router';
-import EdicaoCompetencias from './EdicaoCompetencias';
+
+import { USERS_API_URL } from '../../constants';
+import ListagemCompetencias from '../Competencias/ListagemCompetencias';
+
 class EdicaoDisciplina extends Component {
     constructor(props){
         super(props);
@@ -17,24 +19,53 @@ class EdicaoDisciplina extends Component {
             professoresResult: [],
             redirect: false
         }
-
-        this.setField = this.setField.bind(this);
+        
+        this.obterCompetencias = this.obterCompetencias.bind(this);
+        this.deleteItemFromState = this.deleteItemFromState.bind(this);
+        this.addItemToState = this.addItemToState.bind(this);
         this.salvar = this.salvar.bind(this);
-        this.setProfessores = this.setProfessores.bind(this);
-        this.obterProfessores = this.obterProfessores.bind(this);
-        this.componentDidMount = this.componentDidMount.bind(this);
-        this.addItemFromState = this.addItemFromState.bind(this);
     }
 
     componentDidMount() {
         const { id } = this.props.match.params;
+        this.setState({ id: id });
         this.obterDisciplina(id);
         this.obterCompetencias(id);
         this.obterProfessores();
     }
 
-    setField(event) {
-        let {name: fieldName, value} = event.target;
+    async obterDisciplina(id) {
+        await fetch(`${USERS_API_URL}Disciplinas/${id}`)
+        .then(res => res.json())
+        .then(body => {
+            this.setState({
+                nome: body.nome,
+                descritivo: body.descritivo,
+                horario: body.horario,
+                professores: body.professores
+            });
+        })
+        .catch(err => console.log(err));
+    }
+
+    async obterCompetencias(id) {
+        await fetch(`${USERS_API_URL}Competencias/ObterTodasPorDisciplina/${id}`)
+          .then(res => res.json())
+          .then(competencias => this.setState({ competencias: competencias }))
+          .catch(err => console.log(err));
+    }
+
+    async obterProfessores() {
+        await fetch(`${USERS_API_URL}Professores`)
+        .then(res => res.json())
+        .then(professoresResult => {
+            this.setState({ professoresResult: professoresResult });
+        })
+        .catch(err => console.log(err));
+    }
+
+    setField(e) {
+        let {name: fieldName, value} = e.target;
 
         this.setState({
             [fieldName]: value
@@ -54,45 +85,13 @@ class EdicaoDisciplina extends Component {
             professores: opts
         });
     }
-
-    obterProfessores() {
-        fetch(`${USERS_API_URL}Professores`)
-        .then(res => res.json())
-        .then(professoresResult => {
-            this.setState({ professoresResult: professoresResult });
-            }
-        )
-        .catch(err => console.log(err));
-    }
-
-    obterCompetencias(id) {
-        fetch(`${USERS_API_URL}Competencias/ObterTodasPorDisciplina/${id}`)
-          .then(res => res.json())
-          .then(competencias => this.setState({ competencias: competencias }))
-          .catch(err => console.log(err));
-    }
-
-    obterDisciplina(id) {
-        fetch(`${USERS_API_URL}Disciplinas/${id}`)
-        .then(res => res.json())
-        .then(disciplinasResult => {
-            this.setState({
-                id: disciplinasResult.id,
-                nome: disciplinasResult.nome,
-                descritivo: disciplinasResult.descritivo,
-                horario: disciplinasResult.horario,
-                professores: disciplinasResult.professores
-            });
-        })
-        .catch(err => console.log(err));
-    }
-
-    deleteItemFromState = id => {
-        const updated = this.state.competencias.filter(item => item.id !== id);
+    
+    deleteItemFromState(id) {
+        const updated = this.state.competencias.filter(competencia => competencia.id !== id);
         this.setState({ competencias: updated });
     }
 
-    addItemFromState = (id, disciplinaId, descritivo, nome ) => {
+    addItemToState(id, disciplinaId, descritivo, nome ) {
         const newCompetencia = {
             id: id,
             disciplinaId: disciplinaId,
@@ -101,12 +100,12 @@ class EdicaoDisciplina extends Component {
         };
         var novoState = this.state.competencias;
         novoState.push(newCompetencia);
-        this.setState({ competencias: novoState });
+        this.setState({ ...this.state.competencias, newCompetencia });
     }
 
-    salvar(e){
+    async salvar(e){
         e.preventDefault();
-        fetch(`${USERS_API_URL}Disciplinas/${this.state.id}`, {
+        await fetch(`${USERS_API_URL}Disciplinas/${this.state.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -129,22 +128,22 @@ class EdicaoDisciplina extends Component {
         const { id, nome, descritivo, horario, professores, competencias, professoresResult, redirect } = this.state;
 
         if (redirect) {
-        return <Redirect to="/"/>;
+            return <Redirect to="/disciplinas"/>;
         }
 
         return <Container style={{ paddingTop: "20px" }}>
             <Form onSubmit={this.salvar}>
             <FormGroup>
                 <Label for="nome">Nome:</Label>
-                <Input onChange={this.setField} type="text" name="nome" placeholder="Informe o nome da disciplina" value={nome}/>
+                <Input onChange={e => this.setField(e)} type="text" name="nome" placeholder="Informe o nome da disciplina" value={nome}/>
             </FormGroup>
             <FormGroup>
                 <Label for="descritivo">Descritivo:</Label>
-                <Input onChange={this.setField} type="textarea" name="descritivo" placeholder="Informe o descritivo da disciplina" value={descritivo}/>
+                <Input onChange={e => this.setField(e)} type="textarea" name="descritivo" placeholder="Informe o descritivo da disciplina" value={descritivo}/>
             </FormGroup>
             <FormGroup>
                 <Label for="horario">Horário:</Label>
-                <Input onChange={this.setField} type="time" name="horario" value={horario}/>
+                <Input onChange={e => this.setField(e)} type="time" name="horario" value={horario}/>
             </FormGroup>
             <FormGroup>
                 <Label for="professores">Professores:</Label>
@@ -152,9 +151,15 @@ class EdicaoDisciplina extends Component {
                 {professoresResult.map(opt => <option key={opt.id} value={opt.id}>{opt.nome}</option>)}
                 </Input>
             </FormGroup>
-            <Link className="btn btn-light mr-2" to="/">Voltar</Link>
-            <EdicaoCompetencias deleteItemFromState={this.deleteItemFromState} addItemFromState={this.addItemFromState} disciplinaId={id} competencias={competencias} />{' '}
-            <Button color='success'>Salvar</Button>
+            
+            <ListagemCompetencias deleteItemFromState={this.deleteItemFromState} addItemToState={this.addItemToState} obterCompetencias={this.obterCompetencias} disciplinaId={id} competencias={competencias} />{' '}
+            
+            
+            <div style={{ display: 'flex', marginBottom: '20px' }}>
+                <Link className="btn btn-light mr-2" to="/disciplinas">Voltar</Link>
+                <Button className='ml-auto' color='success'>Salvar</Button>
+            </div>
+            
             </Form>
         </Container>;
     }
