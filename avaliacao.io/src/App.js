@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route,Switch } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import AppHeader from './components/Home/AppHeader';
+import Login from './components/Login/Login';
 import Home from './components/Home/Home';
 import CadastroDisciplina from './components/Disciplinas/CadastroDisciplina';
 import CadastroAluno from './components/Usuarios/CadastroAluno';
@@ -17,6 +18,7 @@ class App extends Component {
   render() {
     return  <Fragment>
       <AppHeader />
+      <Login />
 
       <Router>
         <Switch>
