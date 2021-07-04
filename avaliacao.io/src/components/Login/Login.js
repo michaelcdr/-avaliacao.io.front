@@ -11,6 +11,8 @@ import {Button,
     Container,
     FormText } from 'reactstrap'; 
 
+    
+//const superagent = require('superagent');
 class Login extends Component {
   
     constructor(props){
@@ -19,8 +21,48 @@ class Login extends Component {
             password: '',
             login: ''
         }
+        this.token = {token: ''}
     }
 
+    async autenticar(e) {
+        e.preventDefault();
+        //console.log(this.setState);
+        await fetch(`${USERS_API_URL}Autenticacao/Autenticar`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            password: this.state.password,
+            login: this.state.login
+        })
+    })
+        .then(res => res.json())
+        .then((body) => {
+            console.log(body);
+            alert("Consultei");
+        })
+        //.then(token => this.token({ token: token}))
+        .then(this.handleSubmit)//Chama a função para armazenar o usuario em local storage
+        .catch(err => console.log(err));
+      }
+
+
+    /*async autenticar(e) {
+      e.preventDefault()
+      await superagent
+      .post(`${USERS_API_URL}Autenticacao/Autenticar`)
+      .send({
+                password: password.value, 
+                login: login.value
+            })
+      .then(res => res.json())
+      .then(token => this.token({ token: token}))
+      .then(
+        alert("Consultei"),
+        this.handleSubmit)
+      .catch(err => console.log(err))
+    }*/
 
     changeHeadler = e => {
         this.setState({ [e.target.name]: e.target.value})
@@ -30,20 +72,20 @@ class Login extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         const username = e.target.elements.login.value;
-        localStorage.setItem('@login-avaliacao.io/username', username);
-        //console.log(this.state)
+        localStorage.setItem('@login-avaliacao.io/username', username);//armazena o usuario em local storage
+        console.log(this.state)
         window.location.reload();
     }
 
-    /*quando sair remove os dados que foram armazenados do login*/
+    //Funçao para fazer logout
     handleLogout = () => {
-        localStorage.removeItem('@login-avaliacao.io/username');
+        localStorage.removeItem('@login-avaliacao.io/username');//remove o usuario armazenado em local storage
         window.location.reload();
     }
 
     render() {
         const { login,password } = this.state;
-        const username = localStorage.getItem('@login-avaliacao.io/username');
+        const username = localStorage.getItem('@login-avaliacao.io/username');//tras o username armazenado
         if (username !== null) {
             return (
                 <div style={styles.container}>
@@ -52,8 +94,9 @@ class Login extends Component {
                 </div>
             );
         }
+        //Se não tiver nenhum usuário armazenado (logado) abre o form de login
         return (
-            <Form style={styles.container} onSubmit={this.handleSubmit}>
+            <Form style={styles.container} onSubmit={this.autenticar}>
                 <h1>Avaliação.io</h1>
                 <hr></hr>
             <FormGroup row>
@@ -86,9 +129,10 @@ class Login extends Component {
   }
 }
 
+//Estilos do form
 const styles = {
   container: {
-    /*display: 'flex',*/
+    //display: 'flex',
     textAlign: 'center',
     flexDirection: 'column',
     minWidth: '300px',
