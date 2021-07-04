@@ -21,51 +21,36 @@ class Login extends Component {
             password: '',
             login: ''
         }
-        this.token = {token: ''}
+        this.token = {token: ''};
+
+        this.autenticar = this.autenticar.bind(this);
+        this.changeHeadler = this.changeHeadler.bind(this);
     }
 
     async autenticar(e) {
         e.preventDefault();
         //console.log(this.setState);
         await fetch(`${USERS_API_URL}Autenticacao/Autenticar`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            password: this.state.password,
-            login: this.state.login
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                password: this.state.password,
+                login: this.state.login
+            })
         })
-    })
-        .then(res => res.json())
         .then((body) => {
             console.log(body);
-            alert("Consultei");
         })
         //.then(token => this.token({ token: token}))
-        .then(this.handleSubmit)//Chama a função para armazenar o usuario em local storage
-        .catch(err => console.log(err));
-      }
-
-
-    /*async autenticar(e) {
-      e.preventDefault()
-      await superagent
-      .post(`${USERS_API_URL}Autenticacao/Autenticar`)
-      .send({
-                password: password.value, 
-                login: login.value
-            })
-      .then(res => res.json())
-      .then(token => this.token({ token: token}))
-      .then(
-        alert("Consultei"),
-        this.handleSubmit)
-      .catch(err => console.log(err))
-    }*/
+        .then(this.handleSubmit(e))//Chama a função para armazenar o usuario em local storage
+        .catch(err => console.log("Erro! - " + err));
+    }
 
     changeHeadler = e => {
-        this.setState({ [e.target.name]: e.target.value})
+        this.setState({ [e.target.name]: e.target.value});
+        console.log(this.state);
     }
   
     /*Armazena os dados de login no navegador*/
@@ -73,7 +58,7 @@ class Login extends Component {
         e.preventDefault();
         const username = e.target.elements.login.value;
         localStorage.setItem('@login-avaliacao.io/username', username);//armazena o usuario em local storage
-        console.log(this.state)
+        console.log(this.state);
         window.location.reload();
     }
 
@@ -87,11 +72,9 @@ class Login extends Component {
         const { login,password } = this.state;
         const username = localStorage.getItem('@login-avaliacao.io/username');//tras o username armazenado
         if (username !== null) {
+            alert(`Bem-vindo ${username}!`);
             return (
-                <div style={styles.container}>
-                <p>Bem vindo {username}</p>
-                <Button onClick={this.handleLogout} color='success' type="submit" >Sair</Button>
-                </div>
+                <Redirect to="/"/>
             );
         }
         //Se não tiver nenhum usuário armazenado (logado) abre o form de login

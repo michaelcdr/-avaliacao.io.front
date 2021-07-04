@@ -5,9 +5,16 @@ import { Link } from "react-router-dom";
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 
 class ListagemDisciplinas extends Component {
-  state = {
-    disciplinas: []
+  constructor(props){
+    super(props);
+    this.state = {
+      disciplinas: []
+    }
+    
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
   }
+  
 
   componentDidMount() {
     this.getDisciplinas();

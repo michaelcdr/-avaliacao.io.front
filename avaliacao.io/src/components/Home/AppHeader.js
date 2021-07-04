@@ -13,7 +13,7 @@ import {
     DropdownItem
 } from 'reactstrap'; 
 
-class AppHeader extends Component { 
+class AppHeader extends Component {
     state = { 
         isOpen: false
     };
@@ -23,6 +23,13 @@ class AppHeader extends Component {
             isOpen: !this.state.isOpen
         })
     }
+
+    //Funçao para fazer logout
+    handleLogout = () => {
+        localStorage.removeItem('@login-avaliacao.io/username');//remove o usuario armazenado em local storage
+        window.location.reload();
+    }
+
     render() { 
         return <Navbar color="dark" dark expand="md">
             <NavbarBrand href="/">
@@ -55,6 +62,7 @@ class AppHeader extends Component {
                         <DropdownMenu right>
                             <DropdownItem href="/">Usuário</DropdownItem>
                             <DropdownItem>Configurações</DropdownItem>
+                            <DropdownItem onClick={() => this.handleLogout()}>Sair</DropdownItem>
                         </DropdownMenu>
                     </UncontrolledDropdown>
                 </Nav>
