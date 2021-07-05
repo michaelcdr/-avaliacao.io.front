@@ -10,6 +10,8 @@ class ListagemDisciplinas extends Component {
     this.state = {
       disciplinas: []
     }
+
+    this.token = localStorage.getItem('@login-avaliacao.io/token');
     
     this.componentDidMount = this.componentDidMount.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
@@ -21,7 +23,13 @@ class ListagemDisciplinas extends Component {
   }
 
   async getDisciplinas() {
-    await fetch(`${USERS_API_URL}Disciplinas`)
+    await fetch(`${USERS_API_URL}Disciplinas`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${this.token}`,
+        'Content-Type': 'application/json'
+      }
+    })
       .then(res => res.json())
       .then(res => this.setState({ disciplinas: res }))
       .catch(err => console.log(err));
@@ -31,13 +39,17 @@ class ListagemDisciplinas extends Component {
     await fetch(`${USERS_API_URL}Disciplinas/${id}`, {
       method: 'DELETE',
       headers: {
+        'Authorization': `Bearer ${this.token}`,
         'Access-Control-Allow-Origin' : '*' ,
         'Access-Control-Allow-Methods' : 'DELETE'
       }
-    }).then(res => {
+    })
+      .then(body => {
+        console.log(body);
       const updated = this.state.disciplinas.filter(disciplina => disciplina.id !== id);
       this.setState({ disciplinas: updated })
-    }).catch(err => console.log(err));
+      })
+      .catch(err => console.log(err));
   }
 
   render() {

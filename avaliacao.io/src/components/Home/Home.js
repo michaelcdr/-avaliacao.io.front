@@ -10,10 +10,10 @@ class Home extends Component {
   }
   
   render() {
-    const username = localStorage.getItem('@login-avaliacao.io/username');
+    const nome = localStorage.getItem('@login-avaliacao.io/nome');
     return <Container style={{ paddingTop: "20px", textAlign: 'center', justifyContent: 'center', alignItems: 'center' }}>
       <Container>
-        <p style={{ alignSelf: 'center' }}>Bem-vindo {username}!</p>
+        <p style={{ alignSelf: 'center' }}>Bem-vindo {nome}!</p>
       </Container>
       <img src='logo.png' alt='avaliacao.io' />
     </Container>;

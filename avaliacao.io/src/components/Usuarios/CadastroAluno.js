@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {  Container, Button, FormGroup, Label, Input,Form } from 'reactstrap';
 import { USERS_API_URL } from '../../constants';
 import { Link } from 'react-router-dom';
-import { Redirect } from 'react-router';
 
 class CadastroAluno extends Component {
   constructor(props){
@@ -15,9 +14,10 @@ class CadastroAluno extends Component {
       senha: '',
       matricula: '',
       disciplinas : [],
-      disciplinasResult: [],
-      redirect: false
+      disciplinasResult: []
     }
+
+    this.token = localStorage.getItem('@login-avaliacao.io/token');
 
     this.setField = this.setField.bind(this);
     this.setDisciplinas = this.setDisciplinas.bind(this);
@@ -33,7 +33,8 @@ class CadastroAluno extends Component {
     fetch(`${USERS_API_URL}Alunos`, {
       method: 'POST',
       headers: {
-          'Content-Type': 'application/json'
+        'Authorization': `Bearer ${this.token}`,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
           nome: this.state.nome,
@@ -48,13 +49,8 @@ class CadastroAluno extends Component {
     .then((body) => {
         console.log(body);
         this.setState({ redirect: true });
-        console.log('Sucess');
+        window.location.reload();
     })
-      /*.then((obj) => {
-        this.setState({ redirect: true });
-        console.log(this.state);
-        console.log('success');
-      })*/
       .catch(err => console.log(err));
   }
 
@@ -78,13 +74,16 @@ class CadastroAluno extends Component {
     this.setState({
         disciplinas: opts
     });
-    
-    
-    console.log(this.state);
   }
 
   obterDisciplinas() {
-    fetch(USERS_API_URL + "disciplinas")
+    fetch(`${USERS_API_URL}Disciplinas`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${this.token}`,
+        'Content-Type': 'application/json'
+      }
+    })
       .then(res => res.json())
       .then(disciplinasResult => {
           this.setState({ disciplinasResult: disciplinasResult });
@@ -95,11 +94,6 @@ class CadastroAluno extends Component {
 
   render() {
     const { nome, userName, email, senha, matricula, disciplinasResult} = this.state;
-    const redirect = this.state.redirect;
-
-    if (redirect) {
-      return <Redirect to="/"/>;
-    }
 
     return <Container style={{ paddingTop: "20px" }}>
         <Form onSubmit={this.salvar}>
@@ -117,7 +111,7 @@ class CadastroAluno extends Component {
           </FormGroup>
           <FormGroup>
             <Label for="senha">Senha:</Label>
-            <Input onChange={this.setField} type="email" name="senha" placeholder="Informe a senha do usuário" value={senha}/>
+            <Input onChange={this.setField} type="password" name="senha" placeholder="Informe a senha do usuário" value={senha}/>
           </FormGroup>
           <FormGroup>
             <Label for="matricula">Matricula:</Label>

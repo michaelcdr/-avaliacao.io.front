@@ -17,6 +17,8 @@ class CadastroDisciplina extends Component {
       redirect: false
     }
 
+    this.token =  localStorage.getItem('@login-avaliacao.io/token');
+
     this.setField = this.setField.bind(this);
     this.setProfessores = this.setProfessores.bind(this);
     this.salvar = this.salvar.bind(this);
@@ -27,7 +29,13 @@ class CadastroDisciplina extends Component {
   }
 
   async obterProfessores() {
-    await fetch(`${USERS_API_URL}Professores`)
+    await fetch(`${USERS_API_URL}Professores`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${this.token}`,
+        'Content-Type': 'application/json'
+      }
+    })
       .then(res => res.json())
       .then(professoresResult => {
           this.setState({ professoresResult: professoresResult });
@@ -62,7 +70,8 @@ class CadastroDisciplina extends Component {
     await fetch(`${USERS_API_URL}Disciplinas`, {
       method: 'POST',
       headers: {
-          'Content-Type': 'application/json'
+        'Authorization': `Bearer ${this.token}`,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
           nome: this.state.nome,

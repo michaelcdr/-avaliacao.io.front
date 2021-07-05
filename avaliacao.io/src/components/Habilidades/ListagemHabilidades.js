@@ -15,6 +15,8 @@ class ListagemHabilidades extends Component {
             nomeNovaHabilidade: '',
             descritivoNovaHabilidade: ''
         }
+
+        this.token = localStorage.getItem('@login-avaliacao.io/token');
         
         this.setField = this.setField.bind(this);
         this.deleteHabilidade = this.deleteHabilidade.bind(this);
@@ -33,6 +35,7 @@ class ListagemHabilidades extends Component {
         await fetch(`${USERS_API_URL}Habilidades/${id}`, {
           method: 'DELETE',
           headers: {
+            'Authorization': `Bearer ${this.token}`,
             'Access-Control-Allow-Origin' : '*' ,
             'Access-Control-Allow-Methods' : 'DELETE'
           }
@@ -45,6 +48,7 @@ class ListagemHabilidades extends Component {
         await fetch(`${USERS_API_URL}Habilidades`, {
             method: 'POST',
             headers: {
+                'Authorization': `Bearer ${this.token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -57,7 +61,6 @@ class ListagemHabilidades extends Component {
         .then(body => {
             const { id, descritivo, nome, dimensoes } = body.dados;
             this.props.addItemToState(id, descritivo, nome, dimensoes);
-            console.log('Habilidade criada com sucesso!');
         }).catch(err => console.log(`Erro ao criar habilidade: ${err}`));
 
         this.setState({ nomeNovaHabilidade: '', descritivoNovaHabilidade: '' });

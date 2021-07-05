@@ -15,6 +15,8 @@ class EdicaoCompetencia2 extends Component {
             descritivo: props.competencia.descritivo,
             habilidades: []
         }
+
+        this.token = localStorage.getItem('@login-avaliacao.io/token');
         
         this.obterHabilidades = this.obterHabilidades.bind(this);
         this.setModal = this.setModal.bind(this);
@@ -29,7 +31,13 @@ class EdicaoCompetencia2 extends Component {
     }
 
     async obterHabilidades() {
-        await fetch(`${USERS_API_URL}Habilidades/ObterTodasPorCompetencia/${this.state.id}`)
+        await fetch(`${USERS_API_URL}Habilidades/ObterTodasPorCompetencia/${this.state.id}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${this.token}`,
+                'Content-Type': 'application/json'
+            }
+        })
           .then(res => res.json())
           .then(habilidades => this.setState({ habilidades: habilidades }))
           .catch(err => console.log(err));
@@ -69,6 +77,7 @@ class EdicaoCompetencia2 extends Component {
         await fetch(`${USERS_API_URL}Competencias/${this.state.id}`, {
             method: 'PUT',
             headers: {
+                'Authorization': `Bearer ${this.token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({

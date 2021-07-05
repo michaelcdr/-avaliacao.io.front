@@ -20,6 +20,8 @@ class EdicaoDisciplina extends Component {
             redirect: false
         }
         
+        this.token =  localStorage.getItem('@login-avaliacao.io/token');
+
         this.obterCompetencias = this.obterCompetencias.bind(this);
         this.deleteItemFromState = this.deleteItemFromState.bind(this);
         this.addItemToState = this.addItemToState.bind(this);
@@ -35,7 +37,13 @@ class EdicaoDisciplina extends Component {
     }
 
     async obterDisciplina(id) {
-        await fetch(`${USERS_API_URL}Disciplinas/${id}`)
+        await fetch(`${USERS_API_URL}Disciplinas/${id}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${this.token}`,
+                'Content-Type': 'application/json'
+            }
+        })
         .then(res => res.json())
         .then(body => {
             this.setState({
@@ -49,14 +57,26 @@ class EdicaoDisciplina extends Component {
     }
 
     async obterCompetencias(id) {
-        await fetch(`${USERS_API_URL}Competencias/ObterTodasPorDisciplina/${id}`)
+        await fetch(`${USERS_API_URL}Competencias/ObterTodasPorDisciplina/${id}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${this.token}`,
+                'Content-Type': 'application/json'
+            }
+        })
           .then(res => res.json())
           .then(competencias => this.setState({ competencias: competencias }))
           .catch(err => console.log(err));
     }
 
     async obterProfessores() {
-        await fetch(`${USERS_API_URL}Professores`)
+        await fetch(`${USERS_API_URL}Professores`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${this.token}`,
+                'Content-Type': 'application/json'
+            }
+        })
         .then(res => res.json())
         .then(professoresResult => {
             this.setState({ professoresResult: professoresResult });
@@ -108,6 +128,7 @@ class EdicaoDisciplina extends Component {
         await fetch(`${USERS_API_URL}Disciplinas/${this.state.id}`, {
             method: 'PUT',
             headers: {
+                'Authorization': `Bearer ${this.token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -119,7 +140,6 @@ class EdicaoDisciplina extends Component {
         })
         .then((body) => {
             this.setState({ redirect: true });
-            console.log('Disciplina atualizada com sucesso!');
         })
         .catch(err => console.log('Erro ao atualizar disciplina: ' + err));
     }

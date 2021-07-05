@@ -37,21 +37,15 @@ class AppHeader extends Component {
     render() { 
         return <Navbar color="dark" dark expand="md">
             <NavbarBrand href="/">
-                Avaliacao.Io
-                {/* <img src="https://cdn.rd.gt/assets/images/global/redgate-logo--white.svg?v=1" 
-                    width="128" className="d-inline-block align-top" alt="" /> */}
+                Avaliacao.Io {' '}
+                <img src="../../logo.png" 
+                    width="30" className="d-inline-block align-top" alt="avaliacao.io" />
             </NavbarBrand>
             <NavbarToggler onClick={this.toggle} />
             <Collapse isOpen={this.state.isOpen} navbar>
                 <Nav className="ml-auto" navbar>
                     <NavItem>
-                        <NavLink href="/coordenador/cadastro">Coordenadores</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink href="/professor/cadastro">Professores</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink href="/aluno/cadastro">Alunos</NavLink>
+                        <NavLink href="/cadastro">Cadastros</NavLink>
                     </NavItem>
                     <NavItem>
                         <NavLink href="/disciplinas">Disciplinas</NavLink>

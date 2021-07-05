@@ -11,14 +11,9 @@ import ListagemDisciplinas from './components/Disciplinas/ListagemDisciplinas';
 import EdicaoDisciplina from './components/Disciplinas/EdicaoDisciplina';
 import CadastroDisciplina from './components/Disciplinas/CadastroDisciplina';
 
-import CadastroAluno from './components/Usuarios/CadastroAluno';
-import CadastroProfessor from './components/Usuarios/CadastroProfessor';
-import CadastroCoordenador from './components/Usuarios/CadastroCoordenador';
+import Cadastros from './components/Cadastros/Cadastros';
 
 import ListagemDisciplinasProfessor from './components/DisciplinasProfessor/ListagemDisciplinasProfessor';
-
-
-
 
 class App extends Component {
   render() {
@@ -38,9 +33,7 @@ class App extends Component {
             <Route path="/disciplinas/cadastro" component={CadastroDisciplina} />
             <Route path='/disciplinas/edicao/:id' component={EdicaoDisciplina} />
 
-            <Route path='/aluno/cadastro' component={CadastroAluno} />
-            <Route path='/professor/cadastro' component={CadastroProfessor} />
-            <Route path='/coordenador/cadastro' component={CadastroCoordenador} />
+            <Route path='/cadastro' component={Cadastros} />
             
             <Route path='/login' component={Login} />
           </Switch>

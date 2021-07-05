@@ -38,24 +38,27 @@ class Login extends Component {
         .then(res => res.json())
         .then(body => {
             console.log(body);
-            const { token, userName, nome, email, tipo } = body.dados;
+            if (body.sucesso) {
+                const { token, userName, nome, email, tipo } = body.dados;
 
-            this.setState({
-                token: token,
-                userName: userName,
-                nome: nome,
-                email: email,
-                tipo: tipo
-            });
+                this.setState({
+                    token: token,
+                    userName: userName,
+                    nome: nome,
+                    email: email,
+                    tipo: tipo
+                });
 
-            this.handleSubmit(e);
+                this.handleSubmit(e);
+            } else {
+                alert(body.mensagem);
+            }
         })
         .catch(err => console.log("Erro! - " + err));
     }
 
     changeHeadler = e => {
         this.setState({ [e.target.name]: e.target.value});
-        console.log(this.state);
     }
   
     /*Armazena os dados de login no navegador*/

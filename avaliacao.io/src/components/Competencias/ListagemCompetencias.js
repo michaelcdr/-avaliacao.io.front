@@ -15,6 +15,8 @@ class ListagemCompetencias2 extends Component {
             competencias: props.competencias
         }
 
+        this.token = localStorage.getItem('@login-avaliacao.io/token');
+
         this.setField = this.setField.bind(this);
         this.deleteCompetencia = this.deleteCompetencia.bind(this);
         this.addCompetencia = this.addCompetencia.bind(this);
@@ -32,6 +34,7 @@ class ListagemCompetencias2 extends Component {
         await fetch(`${USERS_API_URL}Competencias/${id}`, {
             method: 'DELETE',
             headers: {
+                'Authorization': `Bearer ${this.token}`,
                 'Access-Control-Allow-Origin' : '*' ,
                 'Access-Control-Allow-Methods' : 'DELETE'
             }
@@ -46,6 +49,7 @@ class ListagemCompetencias2 extends Component {
         await fetch(`${USERS_API_URL}Competencias`, {
             method: 'POST',
             headers: {
+                'Authorization': `Bearer ${this.token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -58,7 +62,6 @@ class ListagemCompetencias2 extends Component {
         .then(body => {
             const { descritivo, disciplinaId, id, nome } = body.dados;
             this.props.addItemToState(id, disciplinaId, descritivo, nome);
-            console.log('Competência criada com sucesso!');
         }).catch(err => console.log(`Erro ao criar competência: ${err}`));
 
         this.setState({ nome: '', descritivo: '' });

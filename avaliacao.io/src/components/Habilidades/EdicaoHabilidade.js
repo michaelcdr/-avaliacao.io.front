@@ -13,6 +13,8 @@ class EdicaoHabilidade extends Component {
             descritivo: props.habilidade.descritivo
         }
 
+        this.token = localStorage.getItem('@login-avaliacao.io/token');
+
         this.setModal = this.setModal.bind(this);
         this.setField = this.setField.bind(this);
         this.confirmAction = this.confirmAction.bind(this);
@@ -34,6 +36,7 @@ class EdicaoHabilidade extends Component {
         await fetch(`${USERS_API_URL}Habilidades/${this.props.habilidade.id}`, {
             method: 'PUT',
             headers: {
+                'Authorization': `Bearer ${this.token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -45,7 +48,6 @@ class EdicaoHabilidade extends Component {
         .then(body => {
             this.props.obterHabilidades();
             this.setModal();
-            console.log('Habilidade atualizada com sucesso!');
         }).catch(err => console.log(`Erro ao atualizar habilidade: ${err}`));
     }
     

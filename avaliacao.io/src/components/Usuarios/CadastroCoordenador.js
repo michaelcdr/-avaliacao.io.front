@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {  Container, Button, FormGroup, Label, Input,Form } from 'reactstrap';
 import { USERS_API_URL } from '../../constants';
 import { Link } from 'react-router-dom';
-import { Redirect } from 'react-router';
 
 class CadastroCoordenador extends Component {
   constructor(props){
@@ -12,11 +11,10 @@ class CadastroCoordenador extends Component {
       nome: '',
       userName: '',
       email: '',
-      senha: '',
-      disciplinas : [],
-      disciplinasResult: [],
-      redirect: false
+      senha: ''
     }
+
+    this.token = localStorage.getItem('@login-avaliacao.io/token');
 
     this.setField = this.setField.bind(this);
     this.salvar = this.salvar.bind(this);
@@ -27,7 +25,8 @@ class CadastroCoordenador extends Component {
     fetch(`${USERS_API_URL}Coordenador`, {
       method: 'POST',
       headers: {
-          'Content-Type': 'application/json'
+        'Authorization': `Bearer ${this.token}`,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
           nome: this.state.nome,
@@ -40,13 +39,8 @@ class CadastroCoordenador extends Component {
     .then((body) => {
         console.log(body);
         this.setState({ redirect: true });
-        console.log('Sucess');
+        window.location.reload();
     })
-      /*.then((obj) => {
-        this.setState({ redirect: true });
-        console.log(this.state);
-        console.log('success');
-      })*/
       .catch(err => console.log(err));
   }
 
@@ -61,11 +55,6 @@ class CadastroCoordenador extends Component {
 
   render() {
     const { nome, userName, email, senha} = this.state;
-    const redirect = this.state.redirect;
-
-    if (redirect) {
-      return <Redirect to="/"/>;
-    }
 
     return <Container style={{ paddingTop: "20px" }}>
         <Form onSubmit={this.salvar}>
@@ -83,7 +72,7 @@ class CadastroCoordenador extends Component {
           </FormGroup>
           <FormGroup>
             <Label for="senha">Senha:</Label>
-            <Input onChange={this.setField} type="email" name="senha" placeholder="Informe a senha do usuário" value={senha}/>
+            <Input onChange={this.setField} type="password" name="senha" placeholder="Informe a senha do usuário" value={senha}/>
           </FormGroup>
           <Link className="btn btn-light mr-2" to="/">Voltar</Link>
           <Button color='success'>Salvar</Button>
