@@ -1,8 +1,7 @@
 import React, { Component, Fragment } from 'react';
-import { Link } from "react-router-dom";
-import { Button, Input, Modal, ModalHeader, ModalFooter, Table, Container, Form, FormGroup, Label } from 'reactstrap';
+import { Button, Input, Modal, ModalHeader, ModalFooter, Container, Form, FormGroup, Label } from 'reactstrap';
 import { USERS_API_URL } from '../../constants';
-import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
+import ListagemHabilidades from '../Habilidades/ListagemHabilidades';
 
 class EdicaoCompetencia2 extends Component {
 
@@ -14,15 +13,12 @@ class EdicaoCompetencia2 extends Component {
             disciplinaId: props.disciplinaId,
             nome: props.competencia.nome,
             descritivo: props.competencia.descritivo,
-            habilidades: [],
-            nomeNovaHabilidade: '',
-            descritivoNovaHabilidade: ''
+            habilidades: []
         }
         
+        this.obterHabilidades = this.obterHabilidades.bind(this);
         this.setModal = this.setModal.bind(this);
         this.setField = this.setField.bind(this);
-        this.deleteHabilidade = this.deleteHabilidade.bind(this);
-        this.addHabilidade = this.addHabilidade.bind(this);
         this.deleteItemFromState = this.deleteItemFromState.bind(this);
         this.addItemToState = this.addItemToState.bind(this);
     }
@@ -50,40 +46,6 @@ class EdicaoCompetencia2 extends Component {
             [fieldName]: value
         });
     };
-
-    async deleteHabilidade(id) {
-        await fetch(`${USERS_API_URL}Habilidades/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'Access-Control-Allow-Origin' : '*' ,
-            'Access-Control-Allow-Methods' : 'DELETE'
-          }
-        }).then(res => {
-          this.deleteItemFromState(id);
-        }).catch(err => console.log(`Erro ao deletar habilidade: ${err}`));
-    }
-
-    async addHabilidade() {
-        await fetch(`${USERS_API_URL}Habilidades`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                nome: this.state.nomeNovaHabilidade,
-                descritivo: this.state.descritivoNovaHabilidade,
-                competenciaId: this.state.id
-            })
-        })
-        .then(res => res.json())
-        .then(body => {
-            const { id, descritivo, nome, dimensoes } = body.dados;
-            this.addItemToState(id, descritivo, nome, dimensoes);
-            console.log('Habilidade criada com sucesso!');
-        }).catch(err => console.log(`Erro ao criar competência: ${err}`));
-
-        this.setState({ nomeNovaHabilidade: '', descritivoNovaHabilidade: '' });
-    }
 
     deleteItemFromState(id) {
         const updated = this.state.habilidades.filter(item => item.id !== id);
@@ -124,7 +86,7 @@ class EdicaoCompetencia2 extends Component {
     }
     
     render() {
-        const { modal, nome, descritivo, habilidades, nomeNovaHabilidade, descritivoNovaHabilidade } = this.state;
+        const { modal, id, nome, descritivo, habilidades } = this.state;
         
         return (
             <Fragment>
@@ -141,53 +103,13 @@ class EdicaoCompetencia2 extends Component {
                         <Label for="descritivo">Descritivo:</Label>
                         <Input onChange={e => this.setField(e)} type="textarea" name="descritivo" placeholder="Informe o descritivo da competência" value={descritivo}/>
                     </FormGroup>
-                    <Table striped>
-                            <thead className="thead-light">
-                            <tr>
-                                <th>Nome da Habilidade</th>
-                                <th>Descritivo da Habilidade</th>
-                                <th style={{ textAlign: "center" }}>Ações</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {!habilidades || habilidades.length <= 0 ?
-                                <tr>
-                                    <td colSpan="6" align="center">
-                                        <b>Não há habilidades cadastradas!</b>
-                                    </td>
-                                </tr>
-                                : habilidades.map(habilidade => (
-                                <tr key={habilidade.id}>
-                                    <td>
-                                    {habilidade.nome}
-                                    </td>
-                                    <td>
-                                    {habilidade.descritivo}
-                                    </td>
-                                    <td align="center">
-                                    <div>
-                                        &nbsp;&nbsp;&nbsp;
-                                        <Link className="btn btn-outline-primary mr-2" to={`/competencia/edicao/${habilidade.id}`}>Editar</Link>{' '}
-                                        <ConfirmationModal color='danger' id={habilidade.id} confirm={this.deleteHabilidade} message="Tem certeza que deseja deletar a habilidade?" buttonLabel="Deletar"/>
-                                    </div>
-                                    </td>
-                                </tr>
-                                ))}
-                                <tr>
-                                    <td><Input onChange={this.setField} type="text" name="nomeNovaHabilidade" placeholder="Informe o nome da nova habilidade" value={nomeNovaHabilidade}/></td>
-                                    <td><Input onChange={this.setField} type="text" name="descritivoNovaHabilidade" placeholder="Informe o descritivo nova habilidade" value={descritivoNovaHabilidade}/></td>
-                                    <td>
-                                    <div align='center'>
-                                        &nbsp;&nbsp;&nbsp;
-                                        <Button onClick={this.addHabilidade} color='success'>Adicionar</Button>
-                                    </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                
-                            </tfoot>
-                    </Table>
+
+                    <ListagemHabilidades 
+                        deleteItemFromState={this.deleteItemFromState} 
+                        addItemToState={this.addItemToState} 
+                        competenciaId={id} 
+                        habilidades={habilidades}
+                        obterHabilidades={this.obterHabilidades} />{' '}
 
                     <div style={{ display: 'flex', marginBottom: '10px' }}>
                         <Button onClick={this.setModal} color='light'>Voltar</Button>

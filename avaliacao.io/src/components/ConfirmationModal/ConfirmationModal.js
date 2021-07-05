@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-class ModalExample extends Component {
+class ConfirmationModal extends Component {
 
     constructor(props) {
         super(props);
@@ -43,4 +43,4 @@ class ModalExample extends Component {
     }
 }
 
-export default ModalExample;
+export default ConfirmationModal;

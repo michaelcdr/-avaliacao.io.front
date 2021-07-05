@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
-import { Col, Container, Row } from 'reactstrap';
-import { Redirect } from 'react-router';
-
-import ListagemDisciplinas from '../Disciplinas/ListagemDisciplinas';
-import { USERS_API_URL } from '../../constants';
+import { Container } from 'reactstrap';
 
 class Home extends Component {
 
@@ -14,30 +10,13 @@ class Home extends Component {
   }
   
   render() {
-    const username = localStorage.getItem('@login-avaliacao.io/username');//tras o username armazenado
-    if (username !== null) {
-      return <Container style={{ paddingTop: "20px" }}>
-        <Row>
-          <Col>
-            <h3>Disciplinas</h3>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            {/* <RegistrationModal isNew={true} addUserToState={this.addUserToState} /> */}
-          </Col>
-        </Row>
-      </Container>;
-    }
-    //Se não tiver nenhum usuário armazenado (logado) abre o form de login
-    return (
-      <Redirect to="/login"/>
-    );
-    
+    const username = localStorage.getItem('@login-avaliacao.io/username');
+    return <Container style={{ paddingTop: "20px", textAlign: 'center', justifyContent: 'center', alignItems: 'center' }}>
+      <Container>
+        <p style={{ alignSelf: 'center' }}>Bem-vindo {username}!</p>
+      </Container>
+      <img src='logo.png' alt='avaliacao.io' />
+    </Container>;
   }
 }
 export default Home;

@@ -26,7 +26,7 @@ class AppHeader extends Component {
 
     //Funçao para fazer logout
     handleLogout = () => {
-        localStorage.removeItem('@login-avaliacao.io/username');//remove o usuario armazenado em local storage
+        localStorage.removeItem('@login-avaliacao.io/dados');
         window.location.reload();
     }
 
@@ -52,8 +52,9 @@ class AppHeader extends Component {
                     <NavItem>
                         <NavLink href="/disciplinas">Disciplinas</NavLink>
                     </NavItem>
+
                     <NavItem>
-                        <NavLink href="/">Competencias</NavLink>
+                        <NavLink href="/professor/disciplinas">Minhas Disciplinas</NavLink>
                     </NavItem>
                     <UncontrolledDropdown nav inNavbar>
                         <DropdownToggle nav caret>

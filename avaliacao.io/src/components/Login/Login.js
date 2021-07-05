@@ -1,30 +1,25 @@
 import React, { Component } from 'react'
 import { USERS_API_URL } from '../../constants';
-import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
-import {Button,
-    Col,
-    Form, 
-    FormGroup, 
-    Label, 
-    Input, 
-    Container,
-    FormText } from 'reactstrap'; 
+import {Button, Col, Form, FormGroup, Label, Input } from 'reactstrap';
 
-    
-//const superagent = require('superagent');
 class Login extends Component {
-  
+    
     constructor(props){
         super(props);
         this.state = {
             password: '',
-            login: ''
+            login: '',
+            token: '',
+            userName: '',
+            nome: '',
+            email: '',
+            tipo: ''
         }
-        this.token = {token: ''};
 
         this.autenticar = this.autenticar.bind(this);
         this.changeHeadler = this.changeHeadler.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     async autenticar(e) {
@@ -40,12 +35,23 @@ class Login extends Component {
                 login: this.state.login
             })
         })
-        .then((body) => {
+        .then(body => {
             console.log(body);
+            const { token, userName, nome, email, tipo } = body.dados;
+
+            this.setState({
+                token: token,
+                userName: userName,
+                nome: nome,
+                email: email,
+                tipo: tipo
+            });
         })
-        //.then(token => this.token({ token: token}))
         .then(this.handleSubmit(e))//Chama a função para armazenar o usuario em local storage
         .catch(err => console.log("Erro! - " + err));
+
+        
+        console.log(this.state);
     }
 
     changeHeadler = e => {
@@ -56,15 +62,14 @@ class Login extends Component {
     /*Armazena os dados de login no navegador*/
     handleSubmit = (e) => {
         e.preventDefault();
-        const username = e.target.elements.login.value;
-        localStorage.setItem('@login-avaliacao.io/username', username);//armazena o usuario em local storage
-        console.log(this.state);
-        window.location.reload();
-    }
-
-    //Funçao para fazer logout
-    handleLogout = () => {
-        localStorage.removeItem('@login-avaliacao.io/username');//remove o usuario armazenado em local storage
+        const dados = {
+            token: this.state.token,
+            userName: this.state.userName,
+            nome: this.state.nome,
+            email: this.state.email,
+            tipo: this.state.tipo
+        }
+        localStorage.setItem('@login-avaliacao.io/dados', dados);
         window.location.reload();
     }
 
@@ -72,7 +77,6 @@ class Login extends Component {
         const { login,password } = this.state;
         const username = localStorage.getItem('@login-avaliacao.io/username');//tras o username armazenado
         if (username !== null) {
-            alert(`Bem-vindo ${username}!`);
             return (
                 <Redirect to="/"/>
             );
