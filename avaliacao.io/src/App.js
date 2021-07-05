@@ -22,7 +22,7 @@ import ListagemDisciplinasProfessor from './components/DisciplinasProfessor/List
 
 class App extends Component {
   render() {
-    const username = localStorage.getItem('@login-avaliacao.io/dados');//tras o username armazenado
+    const username = localStorage.getItem('@login-avaliacao.io/username');//tras o username armazenado
 
     if (username !== null) {
       return  <Fragment>

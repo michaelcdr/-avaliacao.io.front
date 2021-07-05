@@ -35,6 +35,7 @@ class Login extends Component {
                 login: this.state.login
             })
         })
+        .then(res => res.json())
         .then(body => {
             console.log(body);
             const { token, userName, nome, email, tipo } = body.dados;
@@ -46,12 +47,10 @@ class Login extends Component {
                 email: email,
                 tipo: tipo
             });
-        })
-        .then(this.handleSubmit(e))//Chama a função para armazenar o usuario em local storage
-        .catch(err => console.log("Erro! - " + err));
 
-        
-        console.log(this.state);
+            this.handleSubmit(e);
+        })
+        .catch(err => console.log("Erro! - " + err));
     }
 
     changeHeadler = e => {
@@ -62,14 +61,11 @@ class Login extends Component {
     /*Armazena os dados de login no navegador*/
     handleSubmit = (e) => {
         e.preventDefault();
-        const dados = {
-            token: this.state.token,
-            userName: this.state.userName,
-            nome: this.state.nome,
-            email: this.state.email,
-            tipo: this.state.tipo
-        }
-        localStorage.setItem('@login-avaliacao.io/dados', dados);
+        localStorage.setItem('@login-avaliacao.io/token', this.state.token);
+        localStorage.setItem('@login-avaliacao.io/username', this.state.userName);
+        localStorage.setItem('@login-avaliacao.io/nome', this.state.nome);
+        localStorage.setItem('@login-avaliacao.io/email', this.state.email);
+        localStorage.setItem('@login-avaliacao.io/tipo', this.state.tipo);
         window.location.reload();
     }
 

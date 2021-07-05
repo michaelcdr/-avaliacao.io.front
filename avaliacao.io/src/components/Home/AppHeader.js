@@ -26,7 +26,11 @@ class AppHeader extends Component {
 
     //Funçao para fazer logout
     handleLogout = () => {
-        localStorage.removeItem('@login-avaliacao.io/dados');
+        localStorage.removeItem('@login-avaliacao.io/token');
+        localStorage.removeItem('@login-avaliacao.io/username');
+        localStorage.removeItem('@login-avaliacao.io/nome');
+        localStorage.removeItem('@login-avaliacao.io/email');
+        localStorage.removeItem('@login-avaliacao.io/tipo');
         window.location.reload();
     }
 
