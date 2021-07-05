@@ -68,7 +68,7 @@ class AlunoNotas extends Component {
             {notas.map(nota => (
                 <Row>
                     <Col>
-                        <h6>Competência{nota.competencia}</h6>
+                        <h6>Competência: {nota.competencia}</h6>
                         <p>Habilidade: {nota.habilidade}</p>
                     </Col>
                     <Col>
@@ -91,7 +91,7 @@ class AlunoNotas extends Component {
                     </Col>
                 </Row>
             ))}
-                        
+            <Link className="btn btn-light" to={`/disciplinas/aluno`}>Voltar</Link>
         </Container>;
         return (
         <Container style={{ paddingTop: "20px" }}>
