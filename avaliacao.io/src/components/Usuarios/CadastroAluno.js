@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {  Container, Button, FormGroup, Label, Input,Form } from 'reactstrap';
 import { USERS_API_URL } from '../../constants';
 import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router';
 
 class CadastroAluno extends Component {
   constructor(props){
@@ -14,7 +15,8 @@ class CadastroAluno extends Component {
       senha: '',
       matricula: '',
       disciplinas : [],
-      disciplinasResult: []
+      disciplinasResult: [],
+      redirect: false
     }
 
     this.token = localStorage.getItem('@login-avaliacao.io/token');
@@ -49,7 +51,6 @@ class CadastroAluno extends Component {
     .then((body) => {
         console.log(body);
         this.setState({ redirect: true });
-        window.location.reload();
     })
       .catch(err => console.log(err));
   }
@@ -93,7 +94,11 @@ class CadastroAluno extends Component {
   }
 
   render() {
-    const { nome, userName, email, senha, matricula, disciplinasResult} = this.state;
+    const { nome, userName, email, senha, matricula, disciplinasResult, redirect} = this.state;
+
+    if (redirect) {
+      return <Redirect to="/cadastro"/>;
+    }
 
     return <Container style={{ paddingTop: "20px" }}>
         <Form onSubmit={this.salvar}>
@@ -123,7 +128,7 @@ class CadastroAluno extends Component {
               {disciplinasResult.map(opt => <option key={opt.id} value={opt.id}>{opt.nome}</option>)}
             </Input>
           </FormGroup>
-          <Link className="btn btn-light mr-2" to="/">Voltar</Link>
+          <Link className="btn btn-light mr-2" to="/cadastro">Voltar</Link>
           <Button color='success'>Salvar</Button>
         </Form>
     </Container>;

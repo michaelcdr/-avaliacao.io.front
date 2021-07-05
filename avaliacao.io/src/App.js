@@ -7,6 +7,8 @@ import Home from './components/Home/Home';
 
 import Login from './components/Login/Login';
 
+import Avaliacao from './components/Avaliacao/Avaliacao';
+
 import ListagemDisciplinas from './components/Disciplinas/ListagemDisciplinas';
 import EdicaoDisciplina from './components/Disciplinas/EdicaoDisciplina';
 import CadastroDisciplina from './components/Disciplinas/CadastroDisciplina';
@@ -14,10 +16,15 @@ import CadastroDisciplina from './components/Disciplinas/CadastroDisciplina';
 import Cadastros from './components/Cadastros/Cadastros';
 
 import ListagemDisciplinasProfessor from './components/DisciplinasProfessor/ListagemDisciplinasProfessor';
+import ListagemAlunosDisciplina from './components/AlunosDisciplina/ListagemAlunosDisciplina';
+
+import CadastroAluno from './components/Usuarios/CadastroAluno';
+import CadastroCoordenador from './components/Usuarios/CadastroCoordenador';
+import CadastroProfessor from './components/Usuarios/CadastroProfessor';
 
 class App extends Component {
   render() {
-    const username = localStorage.getItem('@login-avaliacao.io/username');//tras o username armazenado
+    const username = localStorage.getItem('@login-avaliacao.io/username');
 
     if (username !== null) {
       return  <Fragment>
@@ -27,7 +34,14 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={Home} />
 
-            <Route exact path="professor/disciplinas" component={ListagemDisciplinasProfessor} />
+            <Route exact path="/alunos/cadastro" component={CadastroAluno} />
+            <Route exact path="/coordenadores/cadastro" component={CadastroCoordenador} />
+            <Route exact path="/professores/cadastro" component={CadastroProfessor} />
+            
+            <Route path="/alunos/avaliar/:alunoId/:disciplinaId" component={Avaliacao} />
+
+            <Route exact path="/disciplinas/professor" component={ListagemDisciplinasProfessor} />
+            <Route exact path="/disciplinas/professor/:id" component={ListagemAlunosDisciplina} />
 
             <Route exact path="/disciplinas" component={ListagemDisciplinas} />
             <Route path="/disciplinas/cadastro" component={CadastroDisciplina} />

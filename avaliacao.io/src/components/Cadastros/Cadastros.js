@@ -8,10 +8,10 @@ import {
     Container, 
     Row, 
     Col } from 'reactstrap';
-import CadastroAluno from '../Usuarios/CadastroAluno';
-import CadastroCoordenador from '../Usuarios/CadastroCoordenador';
-import CadastroProfessor from '../Usuarios/CadastroProfessor';
 import classnames from 'classnames';
+import ListagemAlunos from '../Alunos/ListagemAlunos';
+import ListagemCoordenadores from '../Coordenadores/ListagemCoordenadores';
+import ListagemProfessores from '../Professores/ListagemProfessores';
 
 class Cadastros extends Component {
   constructor(props){
@@ -65,7 +65,7 @@ class Cadastros extends Component {
                 <TabPane tabId="1">
                     <Row>
                         <Col sm="12">
-                            <CadastroAluno />
+                            <ListagemAlunos />
                         </Col>
                     </Row>
                 </TabPane>
@@ -73,7 +73,7 @@ class Cadastros extends Component {
                 <TabPane tabId="2">
                     <Row>
                         <Col sm="12">
-                            <CadastroCoordenador />
+                            <ListagemCoordenadores />
                         </Col>
                     </Row>
                 </TabPane>
@@ -81,7 +81,7 @@ class Cadastros extends Component {
                 <TabPane tabId="3">
                     <Row>
                         <Col sm="12">
-                            <CadastroProfessor />
+                            <ListagemProfessores />
                         </Col>
                     </Row>
                 </TabPane>

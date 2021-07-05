@@ -26,6 +26,7 @@ class AppHeader extends Component {
 
     //Funçao para fazer logout
     handleLogout = () => {
+        localStorage.removeItem('@login-avaliacao.io/id');
         localStorage.removeItem('@login-avaliacao.io/token');
         localStorage.removeItem('@login-avaliacao.io/username');
         localStorage.removeItem('@login-avaliacao.io/nome');
@@ -34,36 +35,78 @@ class AppHeader extends Component {
         window.location.reload();
     }
 
-    render() { 
+    render() {
+        const tipo = localStorage.getItem('@login-avaliacao.io/tipo');
+        var navitems;
+
+        if (tipo === 'Coordenador') {
+            navitems = <Nav className="ml-auto" navbar>
+                <NavItem>
+                    <NavLink href="/cadastro">Usuários</NavLink>
+                </NavItem>
+
+                <NavItem>
+                    <NavLink href="/disciplinas">Disciplinas</NavLink>
+                </NavItem>
+
+                <UncontrolledDropdown nav inNavbar>
+                    <DropdownToggle nav caret>
+                        Perfil
+                    </DropdownToggle>
+                    <DropdownMenu right>
+                        <DropdownItem href="/">Usuário</DropdownItem>
+                        <DropdownItem onClick={() => this.handleLogout()}>Sair</DropdownItem>
+                    </DropdownMenu>
+                </UncontrolledDropdown>
+            </Nav>;
+        } else if (tipo === 'Professor') {
+            navitems = <Nav className="ml-auto" navbar>
+                <NavItem>
+                    <NavLink href="/disciplinas/professor">Minhas Disciplinas</NavLink>
+                </NavItem>
+
+                <UncontrolledDropdown nav inNavbar>
+                    <DropdownToggle nav caret>
+                        Perfil
+                    </DropdownToggle>
+                    <DropdownMenu right>
+                        <DropdownItem href="/">Usuário</DropdownItem>
+                        <DropdownItem onClick={() => this.handleLogout()}>Sair</DropdownItem>
+                    </DropdownMenu>
+                </UncontrolledDropdown>
+            </Nav>;
+        } else if (tipo === 'Aluno') {
+            navitems = <Nav className="ml-auto" navbar>
+                <NavItem>
+                    <NavLink href="/disciplinas/professor">Minhas Disciplinas</NavLink>
+                </NavItem>
+
+                <UncontrolledDropdown nav inNavbar>
+                    <DropdownToggle nav caret>
+                        Perfil
+                    </DropdownToggle>
+                    <DropdownMenu right>
+                        <DropdownItem href="/">Usuário</DropdownItem>
+                        <DropdownItem onClick={() => this.handleLogout()}>Sair</DropdownItem>
+                    </DropdownMenu>
+                </UncontrolledDropdown>
+            </Nav>;
+        }
+
         return <Navbar color="dark" dark expand="md">
             <NavbarBrand href="/">
                 Avaliacao.Io {' '}
-                <img src="../../logo.png" 
-                    width="30" className="d-inline-block align-top" alt="avaliacao.io" />
+                <img 
+                    src="http://localhost:3000/logo.png" 
+                    width="30" 
+                    className="d-inline-block align-top" 
+                    alt="avaliacao.io" 
+                />
             </NavbarBrand>
             <NavbarToggler onClick={this.toggle} />
             <Collapse isOpen={this.state.isOpen} navbar>
                 <Nav className="ml-auto" navbar>
-                    <NavItem>
-                        <NavLink href="/cadastro">Cadastros</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink href="/disciplinas">Disciplinas</NavLink>
-                    </NavItem>
-
-                    <NavItem>
-                        <NavLink href="/professor/disciplinas">Minhas Disciplinas</NavLink>
-                    </NavItem>
-                    <UncontrolledDropdown nav inNavbar>
-                        <DropdownToggle nav caret>
-                            Perfil
-                        </DropdownToggle>
-                        <DropdownMenu right>
-                            <DropdownItem href="/">Usuário</DropdownItem>
-                            <DropdownItem>Configurações</DropdownItem>
-                            <DropdownItem onClick={() => this.handleLogout()}>Sair</DropdownItem>
-                        </DropdownMenu>
-                    </UncontrolledDropdown>
+                    {navitems}
                 </Nav>
             </Collapse>
         </Navbar>;

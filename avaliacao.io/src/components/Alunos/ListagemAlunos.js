@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { Table, Col, Container, Row } from 'reactstrap';
 import { USERS_API_URL } from '../../constants';
 import { Link } from "react-router-dom";
+import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 
-class ListagemAlunosDisciplina extends Component {
+class ListagemAlunos extends Component {
   constructor(props){
     super(props);
     this.state = {
-        disciplinaId: 0,
         alunos: []
     }
         
@@ -20,13 +20,11 @@ class ListagemAlunosDisciplina extends Component {
   
 
   componentDidMount() {
-    const { id } = this.props.match.params;
-    this.setState({ disciplinaId: id });
-    this.getAlunos(id);
+    this.getAlunos();
   }
 
-  async getAlunos(id) {
-    await fetch(`${USERS_API_URL}Alunos/ObterTodosPorDisciplina/${id}`, {
+  async getAlunos() {
+    await fetch(`${USERS_API_URL}Alunos`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${this.token}`,
@@ -41,7 +39,7 @@ class ListagemAlunosDisciplina extends Component {
   }
 
   async deleteItem(id) {
-    await fetch(`${USERS_API_URL}Disciplinas/${id}`, {
+    await fetch(`${USERS_API_URL}Alunos/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${this.token}`,
@@ -49,13 +47,13 @@ class ListagemAlunosDisciplina extends Component {
         'Access-Control-Allow-Methods' : 'DELETE'
       }
     }).then(res => {
-      const updated = this.state.disciplinas.filter(disciplina => disciplina.id !== id);
-      this.setState({ disciplinas: updated })
+      const updated = this.state.alunos.filter(aluno => aluno.id !== id);
+      this.setState({ alunos: updated })
     }).catch(err => console.log(err));
   }
 
   render() {
-    const { disciplinaId, alunos } = this.state;
+    const { alunos } = this.state;
     return (
       <Container style={{ paddingTop: "20px" }}>
         <Row>
@@ -89,7 +87,8 @@ class ListagemAlunosDisciplina extends Component {
                     <td align="center">
                       <div>
                         &nbsp;&nbsp;&nbsp;
-                        <Link className="btn btn-outline-primary" to={`/alunos/avaliar/${aluno.id}/${disciplinaId}`}>Avaliar</Link>
+                        <Link className="btn btn-outline-primary" to={`/alunos/editar/${aluno.id}`}>Editar</Link>{' '}
+                        <ConfirmationModal color={'danger'} id={aluno.id} confirm={this.deleteItem} message="Tem certeza que deseja deletar o aluno?" buttonLabel="Deletar"/>
                       </div>
                     </td>
                   </tr>
@@ -98,7 +97,7 @@ class ListagemAlunosDisciplina extends Component {
             <tfoot>
               <tr>
                 <td colSpan="2">
-                <Link className="btn btn-light" to="/disciplinas/professor">Voltar</Link>
+                <Link className="btn btn-success" to="/alunos/cadastro">Cadastrar</Link>
                 </td>
               </tr>        
             </tfoot>
@@ -109,4 +108,4 @@ class ListagemAlunosDisciplina extends Component {
     );
   }
 }
-export default ListagemAlunosDisciplina;
+export default ListagemAlunos;

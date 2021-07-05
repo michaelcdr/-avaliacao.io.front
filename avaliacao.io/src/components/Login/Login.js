@@ -24,7 +24,6 @@ class Login extends Component {
 
     async autenticar(e) {
         e.preventDefault();
-        //console.log(this.setState);
         await fetch(`${USERS_API_URL}Autenticacao/Autenticar`, {
             method: 'POST',
             headers: {
@@ -37,11 +36,11 @@ class Login extends Component {
         })
         .then(res => res.json())
         .then(body => {
-            console.log(body);
             if (body.sucesso) {
-                const { token, userName, nome, email, tipo } = body.dados;
+                const { id, token, userName, nome, email, tipo } = body.dados;
 
                 this.setState({
+                    id: id,
                     token: token,
                     userName: userName,
                     nome: nome,
@@ -64,12 +63,13 @@ class Login extends Component {
     /*Armazena os dados de login no navegador*/
     handleSubmit = (e) => {
         e.preventDefault();
+        localStorage.setItem('@login-avaliacao.io/id', this.state.id);
         localStorage.setItem('@login-avaliacao.io/token', this.state.token);
         localStorage.setItem('@login-avaliacao.io/username', this.state.userName);
         localStorage.setItem('@login-avaliacao.io/nome', this.state.nome);
         localStorage.setItem('@login-avaliacao.io/email', this.state.email);
         localStorage.setItem('@login-avaliacao.io/tipo', this.state.tipo);
-        window.location.reload();
+        window.location.href = "http://localhost:3000/";
     }
 
     render() {

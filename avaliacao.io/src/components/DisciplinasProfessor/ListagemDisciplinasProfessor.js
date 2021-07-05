@@ -2,51 +2,79 @@ import React, { Component } from 'react';
 import { Table, Col, Container, Row } from 'reactstrap';
 import { USERS_API_URL } from '../../constants';
 import { Link } from "react-router-dom";
-import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 
 class ListagemDisciplinasProfessor extends Component {
   constructor(props){
     super(props);
     this.state = {
-      disciplinas: []
+      disciplinas: [],
+      disciplinasProfessor: [],
+      disiplinasFiltered: []
     }
+
+    this.userId = localStorage.getItem('@login-avaliacao.io/id');
+    this.token = localStorage.getItem('@login-avaliacao.io/token');
     
     this.componentDidMount = this.componentDidMount.bind(this);
-    this.deleteItem = this.deleteItem.bind(this);
+    this.filterDisciplinas = this.filterDisciplinas.bind(this);
+    this.getDisciplinas = this.getDisciplinas.bind(this);
+    this.getProfessor = this.getProfessor.bind(this);
   }
-  
 
   componentDidMount() {
     this.getDisciplinas();
   }
 
   async getDisciplinas() {
-    await fetch(`${USERS_API_URL}Disciplinas`)
+    await fetch(`${USERS_API_URL}Disciplinas`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${this.token}`,
+        'Content-Type': 'application/json'
+      }
+    })
       .then(res => res.json())
-      .then(res => this.setState({ disciplinas: res }))
+      .then(disciplinas => {
+        this.setState({ disciplinas: disciplinas });
+        this.getProfessor();
+      })
       .catch(err => console.log(err));
   }
 
-  async deleteItem(id) {
-    await fetch(`${USERS_API_URL}Disciplinas/${id}`, {
-      method: 'DELETE',
+  async getProfessor() {
+    await fetch(`${USERS_API_URL}Professores/${this.userId}`, {
+      method: 'GET',
       headers: {
-        'Access-Control-Allow-Origin' : '*' ,
-        'Access-Control-Allow-Methods' : 'DELETE'
+        'Authorization': `Bearer ${this.token}`,
+        'Content-Type': 'application/json'
       }
-    }).then(res => {
-      const updated = this.state.disciplinas.filter(disciplina => disciplina.id !== id);
-      this.setState({ disciplinas: updated })
-    }).catch(err => console.log(err));
+    })
+      .then(res => res.json())
+      .then(body => {
+        this.setState({ disciplinasProfessor: body.disciplinas });
+        this.filterDisciplinas();
+      })
+      .catch(err => console.log(err));
+  }
+
+  filterDisciplinas() {
+    const { disciplinas, disciplinasProfessor } = this.state;
+    let res = [];
+    res = disciplinas.filter(el => {
+      return disciplinasProfessor.find(element => {
+        return element === el.id;
+      });
+    });
+    this.setState({ disciplinasFiltered: res });
   }
 
   render() {
-    const { disciplinas } = this.state;
+    const { disciplinasFiltered } = this.state;
     return (
       <Container style={{ paddingTop: "20px" }}>
         <Row>
           <Col>
-            <h3>Disciplinas</h3>
+            <h3>Minhas disciplinas</h3>
           </Col>
         </Row>
         <Row>
@@ -59,11 +87,11 @@ class ListagemDisciplinasProfessor extends Component {
               </tr>
             </thead>
             <tbody>
-              {!disciplinas || disciplinas.length <= 0 ?
+              {!disciplinasFiltered || disciplinasFiltered.length <= 0 ?
                 <tr>
-                  <td colSpan="6" align="center"><b>Não há disciplinas cadastradas.</b></td>
+                  <td colSpan="6" align="center"><b>Não há disciplinas cadastradas para você.</b></td>
                 </tr>
-                : disciplinas.map(disciplina => (
+                : disciplinasFiltered.map(disciplina => (
                   <tr key={disciplina.id}>
                     <td>
                       {disciplina.nome}
@@ -72,19 +100,12 @@ class ListagemDisciplinasProfessor extends Component {
                       <div>
                         &nbsp;&nbsp;&nbsp;
                         <Link className="btn btn-outline-primary" to={`/disciplinas/edicao/${disciplina.id}`}>Editar</Link>{' '}
-                        <ConfirmationModal color={'danger'} id={disciplina.id} confirm={this.deleteItem} message="Tem certeza que deseja deletar a disciplina?" buttonLabel="Deletar"/>
+                        <Link className="btn btn-primary" to={`/disciplinas/professor/${disciplina.id}`}>Alunos</Link>
                       </div>
                     </td>
                   </tr>
                 ))}
             </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan="2">
-                <Link className="btn btn-primary" to="/disciplinas/cadastro">Cadastrar</Link>
-                </td>
-              </tr>        
-            </tfoot>
           </Table>
           </Col>
         </Row>

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {  Container, Button, FormGroup, Label, Input,Form } from 'reactstrap';
 import { USERS_API_URL } from '../../constants';
 import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router';
 
 class CadastroCoordenador extends Component {
   constructor(props){
@@ -11,7 +12,8 @@ class CadastroCoordenador extends Component {
       nome: '',
       userName: '',
       email: '',
-      senha: ''
+      senha: '',
+      redirect: false
     }
 
     this.token = localStorage.getItem('@login-avaliacao.io/token');
@@ -39,7 +41,6 @@ class CadastroCoordenador extends Component {
     .then((body) => {
         console.log(body);
         this.setState({ redirect: true });
-        window.location.reload();
     })
       .catch(err => console.log(err));
   }
@@ -54,7 +55,11 @@ class CadastroCoordenador extends Component {
 
 
   render() {
-    const { nome, userName, email, senha} = this.state;
+    const { nome, userName, email, senha, redirect } = this.state;
+
+    if (redirect) {
+      return <Redirect to="/cadastro"/>;
+    }
 
     return <Container style={{ paddingTop: "20px" }}>
         <Form onSubmit={this.salvar}>
