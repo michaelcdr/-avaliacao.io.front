@@ -18,9 +18,15 @@ import Cadastros from './components/Cadastros/Cadastros';
 import ListagemDisciplinasProfessor from './components/DisciplinasProfessor/ListagemDisciplinasProfessor';
 import ListagemAlunosDisciplina from './components/AlunosDisciplina/ListagemAlunosDisciplina';
 
-import CadastroAluno from './components/Usuarios/CadastroAluno';
-import CadastroCoordenador from './components/Usuarios/CadastroCoordenador';
-import CadastroProfessor from './components/Usuarios/CadastroProfessor';
+import CadastroAluno from './components/Alunos/CadastroAluno';
+import EdicaoAluno from './components/Alunos/EdicaoAluno';
+
+import CadastroCoordenador from './components/Coordenadores/CadastroCoordenador';
+
+import CadastroProfessor from './components/Professores/CadastroProfessor';
+import EdicaoProfessor from './components/Professores/EdicaoProfessor';
+import ListagemDisciplinasAluno from './components/DisciplinasAluno/ListagemDisciplinasAluno';
+import AlunoNotas from './components/AlunoNotas/AlunoNotas';
 
 class App extends Component {
   render() {
@@ -34,20 +40,26 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={Home} />
 
+            <Route path='/cadastro' component={Cadastros} />
+
+            <Route exact path="/disciplinas/aluno" component={ListagemDisciplinasAluno} />
+            <Route exact path="/aluno/notas/:alunoId/:disciplinaId" component={AlunoNotas} />
             <Route exact path="/alunos/cadastro" component={CadastroAluno} />
+            <Route exact path="/alunos/edicao/:id" component={EdicaoAluno} />
+
             <Route exact path="/coordenadores/cadastro" component={CadastroCoordenador} />
+
             <Route exact path="/professores/cadastro" component={CadastroProfessor} />
-            
-            <Route path="/alunos/avaliar/:alunoId/:disciplinaId" component={Avaliacao} />
+            <Route exact path="/professores/edicao/:id" component={EdicaoProfessor} />
 
             <Route exact path="/disciplinas/professor" component={ListagemDisciplinasProfessor} />
             <Route exact path="/disciplinas/professor/:id" component={ListagemAlunosDisciplina} />
 
+            <Route path="/alunos/avaliar/:alunoId/:disciplinaId" component={Avaliacao} />
+
             <Route exact path="/disciplinas" component={ListagemDisciplinas} />
             <Route path="/disciplinas/cadastro" component={CadastroDisciplina} />
             <Route path='/disciplinas/edicao/:id' component={EdicaoDisciplina} />
-
-            <Route path='/cadastro' component={Cadastros} />
             
             <Route path='/login' component={Login} />
           </Switch>

@@ -17,7 +17,6 @@ class ListagemAlunos extends Component {
     this.getAlunos = this.getAlunos.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
   }
-  
 
   componentDidMount() {
     this.getAlunos();
@@ -87,7 +86,7 @@ class ListagemAlunos extends Component {
                     <td align="center">
                       <div>
                         &nbsp;&nbsp;&nbsp;
-                        <Link className="btn btn-outline-primary" to={`/alunos/editar/${aluno.id}`}>Editar</Link>{' '}
+                        <Link className="btn btn-outline-primary" to={`/alunos/edicao/${aluno.id}`}>Editar</Link>{' '}
                         <ConfirmationModal color={'danger'} id={aluno.id} confirm={this.deleteItem} message="Tem certeza que deseja deletar o aluno?" buttonLabel="Deletar"/>
                       </div>
                     </td>

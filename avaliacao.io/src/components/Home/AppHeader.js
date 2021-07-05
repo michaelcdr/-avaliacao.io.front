@@ -78,7 +78,7 @@ class AppHeader extends Component {
         } else if (tipo === 'Aluno') {
             navitems = <Nav className="ml-auto" navbar>
                 <NavItem>
-                    <NavLink href="/disciplinas/professor">Minhas Disciplinas</NavLink>
+                    <NavLink href="/disciplinas/aluno">Minhas Disciplinas</NavLink>
                 </NavItem>
 
                 <UncontrolledDropdown nav inNavbar>

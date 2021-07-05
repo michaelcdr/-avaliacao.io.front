@@ -87,7 +87,7 @@ class ListagemProfessores extends Component {
                     <td align="center">
                       <div>
                         &nbsp;&nbsp;&nbsp;
-                        <Link className="btn btn-outline-primary" to={`/professor/editar/${professor.id}`}>Editar</Link>{' '}
+                        <Link className="btn btn-outline-primary" to={`/professores/edicao/${professor.id}`}>Editar</Link>{' '}
                         <ConfirmationModal color={'danger'} id={professor.id} confirm={this.deleteItem} message="Tem certeza que deseja deletar o professor?" buttonLabel="Deletar"/>
                       </div>
                     </td>

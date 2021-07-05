@@ -75,13 +75,13 @@ class AvaliacaoHabilidades extends Component {
     }
 
     render() {
-        const { alunoId, competenciaId, habilidades, activeTab } = this.state;
+        const { habilidades, activeTab } = this.state;
 
         return <Container style={styles.form}>
             <h6>Avaliar habilidades</h6>
             <Nav style={{ cursor: 'pointer' }} tabs>
                 {habilidades.map(habilidade => (
-                    <NavItem style={{ alignContent: 'center' }}>
+                    <NavItem key={`${habilidade.id}`} style={{ alignContent: 'center' }}>
                         <NavLink
                             className={classnames({ active: activeTab === `${habilidade.id}` })}
                             onClick={() => { this.toggle(`${habilidade.id}`); }}
@@ -96,20 +96,20 @@ class AvaliacaoHabilidades extends Component {
                 {habilidades.map(habilidade => (
                     <TabPane tabId={`${habilidade.id}`}>
                         <Row>
-                            <Col sm="12">
+                            <Col>
                                 <Form>
                                     {habilidade.dimensoes.map(dimensao => (
                                         <FormGroup key={dimensao.id}>
-                                            <Label for={dimensao.id}>{dimensao.nome}</Label>
+                                            <Label for={`${dimensao.id}`}>{dimensao.nome}</Label>
                                             <Input 
                                                 onChange={e => this.atualizarNota(e.target)}
                                                 type="select" 
                                                 name={dimensao.id}
                                                 id={dimensao.id}
                                             >
-                                                <option>0</option>
-                                                <option>1</option>
-                                                <option>2</option>
+                                                <option value='0'>Insuficiente</option>
+                                                <option value='1'>Aptidão</option>
+                                                <option value='2'>Aptidão Plena</option>
                                             </Input>
                                         </FormGroup>
                                     ))}
