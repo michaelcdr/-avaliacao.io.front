@@ -79,6 +79,10 @@ class AlunoHabilidades extends Component {
             <TabContent activeTab={activeTab}>
             {habilidades.map(habilidade => (
                 <TabPane key={habilidade.id} tabId={habilidade.id}>
+                    <Row style={{ padding: '15px', textAlign: 'center', alignItems: 'center' }}>
+                        <Col><h6>Descritivo da habilidade: </h6></Col>
+                        <Col><p>{habilidade.descritivo}</p></Col>
+                    </Row>
                     <Row>
                         <Col>
                             <AlunoNotasHabilidade alunoId={alunoId} habilidadeId={habilidade.id} />
