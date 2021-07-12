@@ -87,7 +87,7 @@ class ListagemCoordenadores extends Component {
                     <td align="center">
                       <div>
                         &nbsp;&nbsp;&nbsp;
-                        <Link className="btn btn-outline-primary" to={`/coordenador/editar/${coordenador.id}`}>Editar</Link>{' '}
+                        <Link className="btn btn-outline-primary" to={`/coordenadores/edicao/${coordenador.id}`}>Editar</Link>{' '}
                         <ConfirmationModal color={'danger'} id={coordenador.id} confirm={this.deleteItem} message="Tem certeza que deseja deletar o coordenador?" buttonLabel="Deletar"/>
                       </div>
                     </td>

@@ -22,6 +22,7 @@ import CadastroAluno from './components/Alunos/CadastroAluno';
 import EdicaoAluno from './components/Alunos/EdicaoAluno';
 
 import CadastroCoordenador from './components/Coordenadores/CadastroCoordenador';
+import EdicaoCoordenador from './components/Coordenadores/EdicaoCoordenador';
 
 import CadastroProfessor from './components/Professores/CadastroProfessor';
 import EdicaoProfessor from './components/Professores/EdicaoProfessor';
@@ -48,6 +49,7 @@ class App extends Component {
             <Route exact path="/alunos/edicao/:id" component={EdicaoAluno} />
 
             <Route exact path="/coordenadores/cadastro" component={CadastroCoordenador} />
+            <Route exact path="/coordenadores/edicao/:id" component={EdicaoCoordenador} />
 
             <Route exact path="/professores/cadastro" component={CadastroProfessor} />
             <Route exact path="/professores/edicao/:id" component={EdicaoProfessor} />

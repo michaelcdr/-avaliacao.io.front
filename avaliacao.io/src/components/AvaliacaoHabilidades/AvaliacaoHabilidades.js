@@ -7,13 +7,10 @@ import {
     TabPane,
     Container, 
     Row, 
-    Form, 
-    FormGroup,  
-    Label, 
-    Input, 
     Col } from 'reactstrap';
 import { USERS_API_URL } from '../../constants';
 import classnames from 'classnames';
+import AvaliacaoHabilidadeNotas from './AvaliacaoHabilidadeNotas';
 
 class AvaliacaoHabilidades extends Component {
     constructor(props){
@@ -26,8 +23,6 @@ class AvaliacaoHabilidades extends Component {
         }
             
         this.token =  localStorage.getItem('@login-avaliacao.io/token');
-
-        this.atualizarNota = this.atualizarNota.bind(this);
     }
 
     componentDidMount() {
@@ -43,29 +38,14 @@ class AvaliacaoHabilidades extends Component {
             }
         })
         .then(res => res.json())
-        .then(habilidades => this.setState({ habilidades: habilidades }))
-        .catch(err => console.log(err));
-    }
+        .then(habilidades => {
+            this.setState({ habilidades: habilidades });
 
-    async atualizarNota(e) {
-        await fetch(`${USERS_API_URL}Alunos/Avaliar`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${this.token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                usuarioId: this.state.alunoId,
-                idDimensao: e.name,
-                nota: e.value,
-                semestre: '1'
-            })
+            if (habilidades[0]) {
+                this.toggle(habilidades[0].id);
+            }
         })
-        .then(res => res.json())
-        .then(body => {
-            console.log(body);
-        })
-        .catch(err => console.log('Erro ao atualizar competência: ' + err));
+        .catch(err => console.log(err));
     }
 
     toggle = tab => {
@@ -75,7 +55,7 @@ class AvaliacaoHabilidades extends Component {
     }
 
     render() {
-        const { habilidades, activeTab } = this.state;
+        const { alunoId, habilidades, activeTab } = this.state;
 
         return <Container style={styles.form}>
             <h6>Avaliar habilidades</h6>
@@ -83,8 +63,8 @@ class AvaliacaoHabilidades extends Component {
                 {habilidades.map(habilidade => (
                     <NavItem key={`${habilidade.id}`} style={{ alignContent: 'center' }}>
                         <NavLink
-                            className={classnames({ active: activeTab === `${habilidade.id}` })}
-                            onClick={() => { this.toggle(`${habilidade.id}`); }}
+                            className={classnames({ active: activeTab === habilidade.id })}
+                            onClick={() => { this.toggle(habilidade.id) }}
                         >
                             {habilidade.nome}
                         </NavLink>
@@ -94,26 +74,10 @@ class AvaliacaoHabilidades extends Component {
 
             <TabContent activeTab={activeTab}>
                 {habilidades.map(habilidade => (
-                    <TabPane tabId={`${habilidade.id}`}>
+                    <TabPane key={habilidade.id} tabId={habilidade.id}>
                         <Row>
                             <Col>
-                                <Form>
-                                    {habilidade.dimensoes.map(dimensao => (
-                                        <FormGroup key={dimensao.id}>
-                                            <Label for={`${dimensao.id}`}>{dimensao.nome}</Label>
-                                            <Input 
-                                                onChange={e => this.atualizarNota(e.target)}
-                                                type="select" 
-                                                name={dimensao.id}
-                                                id={dimensao.id}
-                                            >
-                                                <option value='0'>Insuficiente</option>
-                                                <option value='1'>Aptidão</option>
-                                                <option value='2'>Aptidão Plena</option>
-                                            </Input>
-                                        </FormGroup>
-                                    ))}
-                                </Form>
+                                <AvaliacaoHabilidadeNotas alunoId={alunoId} habilidadeId={habilidade.id} dimensoes={habilidade.dimensoes} />
                             </Col>
                         </Row>
                     </TabPane>  

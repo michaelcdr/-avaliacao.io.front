@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import {  Container, Button, FormGroup, Label, Input,Form } from 'reactstrap';
+import {  Container, Button, FormGroup, Label, Input, Form } from 'reactstrap';
 import { USERS_API_URL } from '../../constants';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
 
-class EdicaoProfessor extends Component {
+class EdicaoCoordenador extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -14,8 +14,6 @@ class EdicaoProfessor extends Component {
         email: '',
         senha: '',
         novaSenha: '',
-        disciplinas : [],
-        disciplinasResult: [],
         redirect: false
         }
 
@@ -31,7 +29,7 @@ class EdicaoProfessor extends Component {
         this.setState({ id: id });
 
         this.obterDisciplinas();
-        this.obterProfessor(id);
+        this.obterCoordenador(id);
     }
 
     obterDisciplinas() {
@@ -50,21 +48,20 @@ class EdicaoProfessor extends Component {
         .catch(err => console.log(err));
     }
 
-    obterProfessor(id) {
-        fetch(`${USERS_API_URL}Professores/${id}`, {
+    obterCoordenador(id) {
+        fetch(`${USERS_API_URL}Coordenador/${id}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${this.token}`,
                 'Content-Type': 'application/json'
             }
-            })
+        })
             .then(res => res.json())
             .then(professor => {
                 this.setState({ 
                     nome: professor.nome,
                     userName: professor.userName,
-                    email: professor.email,
-                    disciplinas : professor.disciplinas,
+                    email: professor.email
                 });
             })
             .catch(err => console.log(err));
@@ -72,7 +69,7 @@ class EdicaoProfessor extends Component {
 
     salvar (e) {
         e.preventDefault();
-        fetch(`${USERS_API_URL}Professores`, {
+        fetch(`${USERS_API_URL}Coordenador`, {
         method: 'PUT',
         headers: {
             'Authorization': `Bearer ${this.token}`,
@@ -84,7 +81,6 @@ class EdicaoProfessor extends Component {
             email: this.state.email,
             senha: this.state.novaSenha,
             senhaAntiga: this.state.senha,
-            disciplinas: this.state.disciplinas,
             id: this.state.id
         })
         })
@@ -119,7 +115,7 @@ class EdicaoProfessor extends Component {
     }
 
     render() {
-        const { nome, userName, email, senha, novaSenha, disciplinas, disciplinasResult, redirect } = this.state;
+        const { nome, userName, email, senha, novaSenha, redirect } = this.state;
 
         if (redirect) {
         return <Redirect to="/cadastro"/>;
@@ -127,36 +123,30 @@ class EdicaoProfessor extends Component {
 
         return <Container style={{ paddingTop: "20px" }}>
             <Form onSubmit={this.salvar}>
-            <FormGroup>
-                <Label for="nome">Nome:</Label>
-                <Input onChange={this.setField} type="text" name="nome" placeholder="Informe o nome do professor" value={nome}/>
-            </FormGroup>
-            <FormGroup>
-                <Label for="userName">Usuario:</Label>
-                <Input onChange={this.setField} type="textarea" name="userName" placeholder="Informe o nome de usuário" value={userName}/>
-            </FormGroup>
-            <FormGroup>
-                <Label for="email">Email:</Label>
-                <Input onChange={this.setField} type="email" name="email" placeholder="Informe o email do usuário" value={email}/>
-            </FormGroup>
-            <FormGroup>
-                <Label for="senha">Senha atual:</Label>
-                <Input onChange={this.setField} type="password" name="senha" placeholder="Informe a senha do usuário" value={senha}/>
-            </FormGroup>
-            <FormGroup>
-                <Label for="novaSenha">Nova senha:</Label>
-                <Input onChange={this.setField} type="password" name="novaSenha" placeholder="Informe a nova senha do usuário" value={novaSenha}/>
-            </FormGroup>
-            <FormGroup>
-                <Label for="disciplinas">Disciplinas:</Label>
-                <Input type="select" name="disciplinas" value={disciplinas} onChange={this.setDisciplinas} multiple> 
-                {disciplinasResult.map(opt => <option key={opt.id} value={opt.id}>{opt.nome}</option>)}
-                </Input>
-            </FormGroup>
-            <Link className="btn btn-light mr-2" to="/cadastro">Voltar</Link>
-            <Button color='success'>Salvar</Button>
+                <FormGroup>
+                    <Label for="nome">Nome:</Label>
+                    <Input onChange={this.setField} type="text" name="nome" placeholder="Informe o nome do coordenador" value={nome}/>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="userName">Usuario:</Label>
+                    <Input onChange={this.setField} type="textarea" name="userName" placeholder="Informe o nome de usuário" value={userName}/>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="email">Email:</Label>
+                    <Input onChange={this.setField} type="email" name="email" placeholder="Informe o email do usuário" value={email}/>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="senha">Senha:</Label>
+                    <Input onChange={this.setField} type="password" name="senha" placeholder="Informe a senha do usuário" value={senha}/>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="novaSenha">Nova senha:</Label>
+                    <Input onChange={this.setField} type="password" name="novaSenha" placeholder="Informe a nova senha do usuário" value={novaSenha}/>
+                </FormGroup>
+                <Link className="btn btn-light mr-2" to="/cadastro">Voltar</Link>
+                <Button color='success'>Salvar</Button>
             </Form>
         </Container>;
     }
 }
-export default EdicaoProfessor;
+export default EdicaoCoordenador;

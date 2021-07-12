@@ -7,13 +7,10 @@ import {
     TabPane,
     Container, 
     Row, 
-    Form, 
-    FormGroup,  
-    Label, 
-    Input, 
     Col } from 'reactstrap';
 import { USERS_API_URL } from '../../constants';
 import classnames from 'classnames';
+import AlunoNotasHabilidade from './AlunoNotasHabilidade';
 
 class AlunoHabilidades extends Component {
     constructor(props){
@@ -23,13 +20,10 @@ class AlunoHabilidades extends Component {
             alunoId: props.alunoId,
             competenciaId: props.competenciaId,
             habilidades: [],
-            notas: props.notas,
-            hablidadesNota: []
+            activeTab: ''
         }
             
         this.token =  localStorage.getItem('@login-avaliacao.io/token');
-
-        this.atualizarNota = this.atualizarNota.bind(this);
     }
 
     componentDidMount() {
@@ -45,29 +39,17 @@ class AlunoHabilidades extends Component {
             }
         })
         .then(res => res.json())
-        .then(habilidades => this.setState({ habilidades: habilidades }))
-        .catch(err => console.log(err));
-    }
+        .then(habilidades => {
+            this.setState({ 
+                habilidades: habilidades
+            });
 
-    async atualizarNota(e) {
-        await fetch(`${USERS_API_URL}Alunos/Avaliar`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${this.token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                usuarioId: this.state.alunoId,
-                idDimensao: e.name,
-                nota: e.value,
-                semestre: '1'
-            })
+            if (habilidades[0]) {
+                this.toggle(habilidades[0].id);
+            }
         })
-        .then(res => res.json())
-        .then(body => {
-            console.log(body);
-        })
-        .catch(err => console.log('Erro ao atualizar competência: ' + err));
+        .catch(err => console.log(err));
+
     }
 
     toggle = tab => {
@@ -77,35 +59,34 @@ class AlunoHabilidades extends Component {
     }
 
     render() {
-        const { habilidades, activeTab, notas } = this.state;
+        const { alunoId, habilidades, activeTab } = this.state;
 
         return <Container style={styles.form}>
             <h6>Avaliação</h6>
-            {notas.map(nota => (
-                <Row>
-                    <Col>
-                        <h6>{nota.competencia}</h6>
-                    </Col>
-                    <Col>
-                        <Form>
-                            <FormGroup key={nota.habilidadeId}>
-                                <Label for={`${nota.dimensaoId}`}>{nota.dimensao}</Label>
-                                <Input 
-                                    type="select" 
-                                    name={nota.dimensaoId}
-                                    id={nota.dimensaoId}
-                                    value={nota.nota}
-                                >
-                                    <option value='Insuficiente'>Insuficiente</option>
-                                    <option value='Aptidão'>Aptidão</option>
-                                    <option value='Aptidão Plena'>Aptidão Plena</option>
-                                </Input>
-                            </FormGroup>
-                        </Form>
-                    </Col>
-                </Row>
+            <Nav style={{ cursor: 'pointer' }} tabs>
+                {habilidades.map(habilidade => (
+                    <NavItem key={habilidade.id} style={{ alignContent: 'center' }}>
+                        <NavLink
+                            className={classnames({ active: activeTab === habilidade.id })}
+                            onClick={() => { this.toggle(habilidade.id) }}
+                        >
+                            {habilidade.nome}
+                        </NavLink>
+                    </NavItem>
+                ))}
+            </Nav>
+
+            <TabContent activeTab={activeTab}>
+            {habilidades.map(habilidade => (
+                <TabPane key={habilidade.id} tabId={habilidade.id}>
+                    <Row>
+                        <Col>
+                            <AlunoNotasHabilidade alunoId={alunoId} habilidadeId={habilidade.id} />
+                        </Col>
+                    </Row>
+                </TabPane>
             ))}
-                        
+            </TabContent>     
         </Container>;
     }
 }
