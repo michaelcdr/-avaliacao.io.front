@@ -21,6 +21,7 @@ class EdicaoDisciplina extends Component {
         }
         
         this.token =  localStorage.getItem('@login-avaliacao.io/token');
+        this.tipo =  localStorage.getItem('@login-avaliacao.io/tipo');
 
         this.obterCompetencias = this.obterCompetencias.bind(this);
         this.deleteItemFromState = this.deleteItemFromState.bind(this);
@@ -147,8 +148,10 @@ class EdicaoDisciplina extends Component {
     render() {
         const { id, nome, descritivo, horario, professores, competencias, professoresResult, redirect } = this.state;
 
-        if (redirect) {
+        if (redirect && this.tipo === 'Coordenador') {
             return <Redirect to="/disciplinas"/>;
+        } else if (redirect && this.tipo === 'Professor') {
+            return <Redirect to="/disciplinas/professor"/>;
         }
 
         return <Container style={{ paddingTop: "20px" }}>
@@ -176,7 +179,12 @@ class EdicaoDisciplina extends Component {
             
             
             <div style={{ display: 'flex', marginBottom: '20px' }}>
-                <Link className="btn btn-light mr-2" to="/disciplinas">Voltar</Link>
+                {this.tipo === 'Coordenador' ?
+                    <Link className="btn btn-light mr-2" to="/disciplinas">Voltar</Link>
+                :
+                    <Link className="btn btn-light mr-2" to="/disciplinas/professor">Voltar</Link>
+                }
+                
                 <Button className='ml-auto' color='success'>Salvar</Button>
             </div>
             
